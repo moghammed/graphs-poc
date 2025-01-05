@@ -1,0 +1,67 @@
+[
+  {
+    "name": "Bar Chart",
+    "id": "bar",
+    "type": "bar",
+    "description": "A bar chart is a chart that represents data using vertical bars. Each bar represents a category of data, and the height of the bar represents the value of the data.",
+    "slots": [
+      {
+        "name": "xAxis",
+        "allowedTypes": ["string", "number", "date"],
+        "description": "The x-axis of the chart. This is the category of data that will be displayed on the x-axis.",
+        "id": "xAxis",
+        "required": true
+      },
+      {
+        "name": "yAxis",
+        "allowedTypes": ["number", "date"],
+        "description": "The y-axis of the chart. This is the value of the data that will be displayed on the y-axis.",
+        "id": "yAxis",
+        "required": true
+      },
+      {
+        "name": "color",
+        "allowedTypes": ["string", "number", "date", "boolean"],
+        "description": "The color of the bars. This is the color of the data that will be displayed on the bars.",
+        "id": "color",
+        "required": false
+      },
+      {
+        "name": "label",
+        "allowedTypes": ["string"],
+        "description": "The label of the bars. This is the label of the data that will be displayed on the bars.",
+        "id": "label",
+        "required": false
+      }
+    ]
+  },
+  {
+    "name": "Pie Chart",
+    "id": "pie",
+    "type": "pie",
+    "description": "A pie chart is a chart that represents data using a circle. Each slice of the circle represents a category of data, and the size of the slice represents the value of the data.",
+    "slots": [
+      {
+        "name": "value",
+        "allowedTypes": ["number"],
+        "description": "The value of the data that will be displayed on the pie chart.",
+        "id": "value",
+        "required": true
+      },
+      {
+        "name": "label",
+        "allowedTypes": ["string"],
+        "description": "The label of the data that will be displayed on the pie chart.",
+        "id": "label",
+        "required": false
+      },
+      {
+        "name": "color",
+        "allowedTypes": ["string", "number", "date", "boolean"],
+        "description": "The color of the pie chart. This is the color of the data that will be displayed on the pie chart.",
+        "id": "color",
+        "required": false
+      }
+    ]
+  }
+]
