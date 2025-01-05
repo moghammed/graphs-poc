@@ -1,50 +1,61 @@
-# React + TypeScript + Vite
+# DnD CSV Graph Builder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A super quick proof of concept for building interactive graphs through drag-and-drop interactions with CSV data.
+Built in a weekend to test my rapid prototyping capabilities and learn some new things.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Intuitive Drag & Drop Interface**: Seamlessly map CSV columns to graph components
+- **Smart Column Type Detection**: Automatic inference of data types (string, number, date, boolean)
+- **Interactive Graph Building**: Real-time visualization updates as you configure your data
+- **Multiple Graph Types**: Support for:
+  - Pie Charts: Perfect for showing proportions and percentages
+  - Bar Charts: Ideal for comparing categories
+- **Responsive Design**: Modern, clean interface that works across devices
+- **Type-Safe**: Built with TypeScript for robust development
 
-## Expanding the ESLint configuration
+## 🛠️ Technical Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Frontend**: React 18 with TypeScript
+- **State Management**: Combination of Jotai and Zustand for simple and efficient state handling
+- **Drag & Drop**: DND Kit for smooth drag and drop interactions
+- **Styling**: Emotion for styled components + TailwindCSS for utility classes
+- **Visualization**: Visx (by Airbnb) for powerful, flexible graphs
+- **Build Tool**: Vite for lightning-fast development experience
+- **CSV Parsing**: Papa Parse for reliable CSV data handling
 
-- Configure the top-level `parserOptions` property like this:
+## 🏃‍♂️ Quick Start
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## 🎯 How It Works
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+1. **Upload CSV**: Start by uploading your CSV file
+2. **Configure Columns**: Review and adjust automatically detected column types
+3. **Choose Graph**: Select your desired visualization type
+4. **Map Data**: Drag and drop columns to configure your graph
+5. **Done!**: Your interactive visualization is ready to use
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## TODO
+
+- [ ] Make Bar chart work
+- [ ] Add Bubble Chart
+- [ ] Add functionality for mapping many fields to 1 config
+- [ ] Add Graph series
+- [ ] Add data transformation capabilities
+- [ ] Add export functionality
+- [ ] Add more graph types
+- [ ] Improve UX
+- [ ] Improve UI
+
+## 📝 License
+
+GNU GPLv3 - feel free to use this code as inspiration for your own projects!
