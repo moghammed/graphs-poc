@@ -69,7 +69,7 @@ export const BarChart = () => {
       event
     );
     showTooltip({
-      tooltipLeft: coords?.x,
+      tooltipLeft: coords?.x + 10,
       tooltipTop: coords?.y + 200 - window.scrollY,
       tooltipData: datum,
     });
@@ -133,7 +133,7 @@ export const BarChart = () => {
                 width={barWidth}
                 height={barHeight}
                 fill={getColor(d.color)}
-                onMouseOver={(e) => handleMouseOver(e, d)}
+                onMouseMove={(e) => handleMouseOver(e, d)}
                 onMouseLeave={hideTooltip}
               />
             );

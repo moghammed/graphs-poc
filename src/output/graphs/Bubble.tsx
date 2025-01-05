@@ -62,7 +62,7 @@ export const BubbleChart = () => {
       event
     );
     showTooltip({
-      tooltipLeft: coords?.x,
+      tooltipLeft: coords?.x + 10,
       tooltipTop: coords?.y ? coords.y + 200 - window.scrollY : 0,
       tooltipData: datum,
     });
@@ -84,18 +84,19 @@ export const BubbleChart = () => {
     })
     .filter((d) => !isNaN(d.x) && !isNaN(d.y) && !isNaN(d.size));
 
-  const xMax = innerWidth;
-  const yMax = innerHeight;
+  const xMax = innerWidth - margin.right;
+  const yMax = innerHeight - margin.bottom - xAxisHeight;
+  const xMin = margin.left;
+
+  const minX = Math.min(...bubbleData.map((d) => d.x));
+  const maxX = Math.max(...bubbleData.map((d) => d.x));
 
   const xScale = useMemo(
     () =>
       scaleLinear<number>({
-        range: [0, xMax],
+        range: [xMin, xMax],
         round: true,
-        domain: [
-          Math.min(...bubbleData.map((d) => d.x)),
-          Math.max(...bubbleData.map((d) => d.x)),
-        ],
+        domain: [minX - (maxX - minX) * 0.05, maxX + (maxX - minX) * 0.05],
       }),
     [xMax, bubbleData]
   );
@@ -148,7 +149,7 @@ export const BubbleChart = () => {
                 r={r}
                 fill={getColor(d.color)}
                 opacity={0.7}
-                onMouseOver={(e) => handleMouseOver(e, d)}
+                onMouseMove={(e) => handleMouseOver(e, d)}
                 onMouseLeave={hideTooltip}
               />
             );
@@ -157,7 +158,7 @@ export const BubbleChart = () => {
         <Group top={margin.top} left={margin.left}>
           <AxisBottom
             scale={xScale}
-            top={innerHeight}
+            top={innerHeight - xAxisHeight - margin.bottom}
             left={yAxisWidth}
             numTicks={10}
             tickLabelProps={() => ({

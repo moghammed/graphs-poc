@@ -71,7 +71,7 @@ export const PieChart = () => {
       event
     );
     showTooltip({
-      tooltipLeft: coords?.x,
+      tooltipLeft: coords?.x + 10,
       tooltipTop: coords?.y + 200 - window.scrollY,
       tooltipData: datum,
     });
