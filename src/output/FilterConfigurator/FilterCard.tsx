@@ -7,8 +7,10 @@ import { useMemo } from "react";
 import { dataAtom } from "../../input";
 import { uniq } from "ramda";
 import { getInput } from "../../util/inputs";
+import { MdDelete } from "react-icons/md";
 
 const FilterCardContainer = styled.div`
+  position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -17,6 +19,15 @@ const FilterCardContainer = styled.div`
   border: 1px solid #000;
   border-radius: 5px;
   padding: 10px;
+  gap: 5px;
+`;
+
+const DeleteButton = styled.button`
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px;
 `;
 
 export const FilterCard = ({ filter }: { filter: Filter }) => {
@@ -26,7 +37,7 @@ export const FilterCard = ({ filter }: { filter: Filter }) => {
 
   const availableOperators = getOperators(columnType);
 
-  const { updateFilter } = useStore();
+  const { updateFilter, removeFilter } = useStore();
   const [columns] = useAtom(ColumnConfigAtom);
 
   const uniqueValues = useMemo(() => {
@@ -68,6 +79,9 @@ export const FilterCard = ({ filter }: { filter: Filter }) => {
       {getInput(filter, (value) =>
         updateFilter(filter.id, { ...filter, value })
       )(uniqueValues)}
+      <DeleteButton onClick={() => removeFilter(filter.id)}>
+        <MdDelete />
+      </DeleteButton>
     </FilterCardContainer>
   );
 };
