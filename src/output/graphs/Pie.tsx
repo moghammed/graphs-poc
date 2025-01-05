@@ -1,22 +1,16 @@
 import { useAtom } from "jotai";
-import { GraphTypeAtom } from "../index";
-import { useStore } from "../../store/store";
-import { dataAtom } from "../../input";
 import { localPoint } from "@visx/event";
-
-import Pie, { ProvidedProps, PieArcDatum } from "@visx/shape/lib/shapes/Pie";
+import Pie from "@visx/shape/lib/shapes/Pie";
 import { scaleOrdinal } from "@visx/scale";
 import { Group } from "@visx/group";
 import { useTooltip } from "@visx/tooltip";
 import { MouseEvent, useMemo } from "react";
 import styled from "@emotion/styled";
-
 import { schemePaired } from "d3-scale-chromatic";
 
-interface PieArcProps {
-  arcs: any;
-  path: any;
-}
+import { useStore } from "../../store/store";
+import { dataAtom } from "../../input";
+import { applyFilters } from "../../util/applyFilters";
 
 const Tooltip = styled.div`
   position: fixed;
@@ -30,8 +24,13 @@ const Tooltip = styled.div`
 `;
 
 export const PieChart = () => {
-  const [graphType] = useAtom(GraphTypeAtom);
-  const [data] = useAtom(dataAtom);
+  const [unfilteredData] = useAtom(dataAtom);
+  const { filters } = useStore();
+  const data = useMemo(
+    () => applyFilters(unfilteredData, filters),
+    [unfilteredData, filters]
+  );
+
   const { mapping } = useStore();
 
   const {
@@ -43,15 +42,13 @@ export const PieChart = () => {
     hideTooltip,
   } = useTooltip();
 
-  const pieData = data
-    .filter((d) => d.Year === "2012")
-    .map((row) => {
-      return {
-        label: row[mapping["label"]],
-        value: row[mapping["value"]],
-        color: row[mapping["color"]] ?? row[mapping["label"]],
-      };
-    });
+  const pieData = data.map((row) => {
+    return {
+      label: row[mapping["label"]],
+      value: row[mapping["value"]],
+      color: row[mapping["color"]] ?? row[mapping["label"]],
+    };
+  });
 
   const margin = { top: 20, right: 20, bottom: 20, left: 20 };
   const width = 800;
@@ -69,7 +66,6 @@ export const PieChart = () => {
     event: MouseEvent<SVGPathElement>,
     datum: { label: string; value: number }
   ) => {
-    console.log({ datum });
     const coords = localPoint(
       (event.target as any).ownerSVGElement as any,
       event
@@ -86,8 +82,6 @@ export const PieChart = () => {
     range: schemePaired as any,
     unknown: "#000",
   });
-
-  window.getColor = getColor;
 
   return (
     <>

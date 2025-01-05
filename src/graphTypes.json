@@ -28,7 +28,7 @@
       },
       {
         "name": "label",
-        "allowedTypes": ["string"],
+        "allowedTypes": ["string", "number", "date", "boolean"],
         "description": "The label of the bars. This is the label of the data that will be displayed on the bars.",
         "id": "label",
         "required": false
@@ -50,7 +50,7 @@
       },
       {
         "name": "label",
-        "allowedTypes": ["string"],
+        "allowedTypes": ["string", "number", "date", "boolean"],
         "description": "The label of the data that will be displayed on the pie chart.",
         "id": "label",
         "required": false
@@ -60,6 +60,49 @@
         "allowedTypes": ["string", "number", "date", "boolean"],
         "description": "The color of the pie chart. This is the color of the data that will be displayed on the pie chart.",
         "id": "color",
+        "required": false
+      }
+    ]
+  },
+  {
+    "name": "Bubble Chart",
+    "id": "bubble",
+    "type": "point",
+    "description": "A bubble chart is a chart that represents data using circles. Each circle represents a data point, and the size, color, and position of the circle represents the value of the data.",
+    "slots": [
+      {
+        "name": "xAxis",
+        "allowedTypes": ["string", "number", "date", "boolean"],
+        "description": "The x-axis of the chart. This is the category of data that will be displayed on the x-axis.",
+        "id": "xAxis",
+        "required": true
+      },
+      {
+        "name": "yAxis",
+        "allowedTypes": ["string", "number", "date", "boolean"],
+        "description": "The y-axis of the chart. This is the value of the data that will be displayed on the y-axis.",
+        "id": "yAxis",
+        "required": true
+      },
+      {
+        "name": "size",
+        "allowedTypes": ["number", "boolean"],
+        "description": "The size of the data that will be displayed on the bubble chart.",
+        "id": "size",
+        "required": true
+      },
+      {
+        "name": "color",
+        "allowedTypes": ["string", "number", "date", "boolean"],
+        "description": "The color of the bubble chart. This is the color of the data that will be displayed on the bubble chart.",
+        "id": "color",
+        "required": false
+      },
+      {
+        "name": "label",
+        "allowedTypes": ["string", "number", "date", "boolean"],
+        "description": "The label of the bubble chart. This is the label of the data that will be displayed on the bubble chart.",
+        "id": "label",
         "required": false
       }
     ]

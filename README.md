@@ -46,11 +46,14 @@ Built in a weekend to test my rapid prototyping capabilities and learn some new 
 
 ## TODO
 
-- [ ] Make Bar chart work
-- [ ] Add Bubble Chart
+- [x] Make Bar chart work
+- [x] Add Bubble Chart
+- [x] Add data filtering
 - [ ] Add functionality for mapping many fields to 1 config
 - [ ] Add Graph series
-- [ ] Add data transformation capabilities
+- [ ] Add more data transformation capabilities
+  - [ ] sorting?
+  - [ ] aggregation?
 - [ ] Add export functionality
 - [ ] Add more graph types
 - [ ] Improve UX

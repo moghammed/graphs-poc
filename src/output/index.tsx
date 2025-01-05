@@ -4,6 +4,9 @@ import { GraphType, GraphTypePicker } from "./GraphTypePicker/GraphTypePicker";
 import { atom, useAtom } from "jotai";
 import { FieldMapper } from "./FieldMapper/FieldMapper";
 import { PieChart } from "./graphs/Pie";
+import { BarChart } from "./graphs/Bar";
+import { BubbleChart } from "./graphs/Bubble";
+import { FilterConfigurator } from "./FilterConfigurator/FilterConfigurator";
 
 const OutputContainer = styled.div`
   display: flex;
@@ -39,8 +42,11 @@ export const Output = () => {
       <HorizontalFlexContainer>
         <GraphTypePicker />
         <VerticalFlexContainer>
+          {graphType && <FilterConfigurator />}
           {graphType && <FieldMapper graphType={graphType} />}
           {graphType?.id === "pie" && <PieChart />}
+          {graphType?.id === "bar" && <BarChart />}
+          {graphType?.id === "bubble" && <BubbleChart />}
         </VerticalFlexContainer>
       </HorizontalFlexContainer>
     </OutputContainer>
