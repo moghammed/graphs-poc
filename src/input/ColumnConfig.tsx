@@ -21,6 +21,15 @@ const EqualSpace = styled.div`
   width: 100%;
 `;
 
+const ExplanationContainer = styled.div`
+  margin-bottom: 20px;
+
+  h2 {
+    font-size: 20px;
+    font-weight: 600;
+  }
+`;
+
 export const ColumnConfigAtom = atom<ColumnConfig[]>([]);
 
 export const ColumnConfig = ({ data, meta }: ColumnConfigProps) => {
@@ -40,7 +49,13 @@ export const ColumnConfig = ({ data, meta }: ColumnConfigProps) => {
 
   return (
     <div>
-      <h2>Column Config</h2>
+      <ExplanationContainer>
+        <h2>Column Config</h2>
+        <p>
+          We've made a best guess at the type of each column. You can change
+          this by selecting the type from the dropdown.
+        </p>
+      </ExplanationContainer>
       {meta.fields.map((field: string, index: number) => (
         <EqualSpace key={field}>
           <label>{field}</label>

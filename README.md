@@ -58,9 +58,10 @@ Built in a weekend to test my rapid prototyping capabilities and learn some new 
 - [ ] Add more graph types
 - [ ] Improve UX
 
-  - [ ] Automatic parsing
-  - [ ] Next button should be at the bottom of the page
-  - [ ] remove the "back" button
+  - [x] Add demo datasets
+  - [x] Automatic parsing
+  - [x] Next button should be at the bottom of the page
+  - [x] remove the "back" button
   - [ ] add a "reset" button
   - [ ] hide column draggables until chart is selected
   - [ ] Move column draggables
