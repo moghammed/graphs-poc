@@ -20,6 +20,7 @@ const SampleDataCard = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  cursor: pointer;
 
   gap: 10px;
 
