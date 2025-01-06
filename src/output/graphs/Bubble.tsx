@@ -62,7 +62,7 @@ export const BubbleChart = () => {
       event
     );
     showTooltip({
-      tooltipLeft: coords?.x + 10,
+      tooltipLeft: (coords?.x ?? 0) + 10,
       tooltipTop: coords?.y ? coords.y + 200 - window.scrollY : 0,
       tooltipData: datum,
     });
@@ -182,9 +182,11 @@ export const BubbleChart = () => {
       </svg>
       {tooltipOpen && tooltipData && (
         <Tooltip
-          style={{ transform: `translate(${tooltipLeft}px, ${tooltipTop}px)` }}
+          style={{
+            transform: `translate(${tooltipLeft ?? 0}px, ${tooltipTop ?? 0}px)`,
+          }}
         >
-          {(tooltipData as any).label}
+          {(tooltipData as { label: string }).label}
         </Tooltip>
       )}
     </>

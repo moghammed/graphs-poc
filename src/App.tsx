@@ -1,8 +1,6 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./compiled.css";
-import { dataAtom, Input, metaAtom } from "./input";
+import { dataAtom, Input } from "./input";
 import { Output } from "./output";
 import styled from "@emotion/styled";
 import { MdArrowForward, MdArrowBack } from "react-icons/md";
@@ -44,8 +42,8 @@ function App() {
   const [step, setStep] = useState<Step>(Step.Input);
   const [data] = useAtom(dataAtom);
   const [columns] = useAtom(ColumnConfigAtom);
-  const [draggingColumn, setDraggingColumn] = useAtom(draggingColumnAtom);
-  const { addMapping, removeMapping } = useStore();
+  const [, setDraggingColumn] = useAtom(draggingColumnAtom);
+  const { addMapping } = useStore();
 
   const handleDragStart = (event: DragStartEvent) => {
     setDraggingColumn(event.active.data.current as ColumnConfig);

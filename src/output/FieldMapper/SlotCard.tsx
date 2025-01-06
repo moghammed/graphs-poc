@@ -1,4 +1,3 @@
-import { useDroppable } from "@dnd-kit/core";
 import { Slot } from "../GraphTypePicker/GraphTypePicker";
 import { useRef, useState } from "react";
 import { Tooltip } from "../../components/Tooltip";
@@ -64,12 +63,6 @@ const CardFooter = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-`;
-
-const AllowedTypesIndicator = styled.span`
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
 `;
 
 const CardActionButton = styled.button`

@@ -57,6 +57,18 @@ Built in a weekend to test my rapid prototyping capabilities and learn some new 
 - [ ] Add export functionality
 - [ ] Add more graph types
 - [ ] Improve UX
+
+  - [ ] Automatic parsing
+  - [ ] Next button should be at the bottom of the page
+  - [ ] remove the "back" button
+  - [ ] add a "reset" button
+  - [ ] hide column draggables until chart is selected
+  - [ ] Move column draggables
+  - [ ] Make filters a floating panel
+  - [ ] change clear item to eraser
+  - [ ] unify styling of drop zone and column draggables
+  - [ ] styling of left menu
+
 - [ ] Improve UI
 
 ## 📝 License

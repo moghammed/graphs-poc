@@ -71,8 +71,8 @@ export const PieChart = () => {
       event
     );
     showTooltip({
-      tooltipLeft: coords?.x + 10,
-      tooltipTop: coords?.y + 200 - window.scrollY,
+      tooltipLeft: (coords?.x ?? 0) + 10,
+      tooltipTop: (coords?.y ?? 0) + 200 - window.scrollY,
       tooltipData: datum,
     });
   };
@@ -109,9 +109,11 @@ export const PieChart = () => {
       </svg>
       {tooltipOpen && tooltipData && (
         <Tooltip
-          style={{ transform: `translate(${tooltipLeft}px, ${tooltipTop}px)` }}
+          style={{
+            transform: `translate(${tooltipLeft ?? 0}px, ${tooltipTop ?? 0}px)`,
+          }}
         >
-          {`${tooltipData.label}`}
+          {(tooltipData as { label: string }).label}
         </Tooltip>
       )}
     </>

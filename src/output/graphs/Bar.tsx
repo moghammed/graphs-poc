@@ -14,7 +14,6 @@ import { useStore } from "../../store/store";
 import { dataAtom } from "../../input";
 import { Group } from "@visx/group";
 import { AxisBottom, AxisLeft } from "@visx/axis";
-import { text } from "framer-motion/client";
 import { applyFilters } from "../../util/applyFilters";
 
 const Tooltip = styled.div`
@@ -26,10 +25,6 @@ const Tooltip = styled.div`
   font-size: 14px;
   max-width: 250px;
   z-index: 1000;
-`;
-
-const XTick = styled(text)`
-  transform: rotate(-15deg);
 `;
 
 export const BarChart = () => {
@@ -69,8 +64,8 @@ export const BarChart = () => {
       event
     );
     showTooltip({
-      tooltipLeft: coords?.x + 10,
-      tooltipTop: coords?.y + 200 - window.scrollY,
+      tooltipLeft: (coords?.x ?? 0) + 10,
+      tooltipTop: (coords?.y ?? 0) + 200 - window.scrollY,
       tooltipData: datum,
     });
   };
@@ -173,10 +168,10 @@ export const BarChart = () => {
       {tooltipOpen && tooltipData && (
         <Tooltip
           style={{
-            transform: `translate(${tooltipLeft ?? 0 + 10}px, ${tooltipTop}px)`,
+            transform: `translate(${tooltipLeft ?? 0}px, ${tooltipTop ?? 0}px)`,
           }}
         >
-          {`${tooltipData.label}`}
+          {(tooltipData as { label: string }).label}
         </Tooltip>
       )}
     </>

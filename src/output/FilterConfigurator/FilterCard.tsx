@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { ColumnConfig, ColumnConfigAtom } from "../../input/ColumnConfig";
+import { ColumnConfigAtom } from "../../input/ColumnConfig";
 import { Filter, FilterOperator, useStore } from "../../store/store";
 import styled from "@emotion/styled";
 import { getOperators } from "../../util/operators";

@@ -1,5 +1,3 @@
-import styled from "@emotion/styled";
-
 import { atom, useAtom } from "jotai";
 import Papa from "papaparse";
 import { useState } from "react";

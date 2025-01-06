@@ -57,7 +57,7 @@ function applyFilter(data: any[], filter: Filter) {
 }
 
 export function applyFilters(data: any[], filters: Record<string, Filter>) {
-  return Object.entries(filters).reduce((acc, [key, filter]) => {
+  return Object.entries(filters).reduce((acc, [, filter]) => {
     return applyFilter(acc, filter);
   }, data);
 }

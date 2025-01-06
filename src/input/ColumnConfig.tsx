@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { guessColumnTypes } from "./guessColumnTypes";
 import { atom, useAtom } from "jotai";
 

@@ -2,8 +2,6 @@ import { useAtom } from "jotai";
 import { ColumnConfigAtom } from "../../input/ColumnConfig";
 import styled from "@emotion/styled";
 import { ColumnDraggable } from "./ColumnDraggable";
-import { DragOverlay } from "@dnd-kit/core";
-import { draggingColumnAtom } from "../../App";
 
 const ColumnDragZoneContainer = styled.div`
   flex: 0 0 auto;
@@ -17,7 +15,6 @@ const ColumnDragZoneContainer = styled.div`
 
 export const ColumnDragZone = () => {
   const [columns] = useAtom(ColumnConfigAtom);
-  const [draggingColumn] = useAtom(draggingColumnAtom);
 
   return (
     <ColumnDragZoneContainer>
