@@ -18,16 +18,16 @@ export const getAllowedTypesIcons = (slot: Slot) => {
   return slot.allowedTypes
     .map((type) => {
       if (type === "string") {
-        return <MdTextFields key="TextFields" />;
+        return <MdTextFields key="TextFields" title="Text" />;
       }
       if (type === "number") {
-        return <MdNumbers key="Numbers" />;
+        return <MdNumbers key="Numbers" title="Number" />;
       }
       if (type === "date") {
-        return <MdCalendarMonth key="CalendarMonth" />;
+        return <MdCalendarMonth key="CalendarMonth" title="Date" />;
       }
       if (type === "boolean") {
-        return <MdCheckBox key="CheckBox" />;
+        return <MdCheckBox key="CheckBox" title="Boolean" />;
       }
       return null;
     })
@@ -38,7 +38,7 @@ const Card = styled.div`
   border: 1px solid #000;
   border-radius: 10px;
   padding: 10px;
-  width: 200px;
+  min-width: 200px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -58,19 +58,7 @@ const CardBody = styled.div`
   gap: 10px;
 `;
 
-const CardFooter = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const CardActionButton = styled.button`
-  background-color: #000;
-  color: #fff;
-  border: 1px solid #000;
-  border-radius: 10px;
-  padding: 10px;
+const HeaderButtons = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -87,30 +75,36 @@ export const SlotCard = ({ slot }: { slot: Slot }) => {
     <Card className="max-w-sm">
       <CardHeader>
         {slot.name}{" "}
-        <div
-          ref={questionMarkRef}
-          onMouseEnter={() => setShowTooltip(true)}
-          onMouseLeave={() => setShowTooltip(false)}
-        >
-          <MdQuestionMark
-            style={{
-              cursor: "pointer",
-            }}
-          />
-        </div>
+        <HeaderButtons>
+          {mapping[slot.name] ? (
+            <MdClear
+              color="red"
+              onClick={() => removeMapping(slot.name)}
+              style={{
+                cursor: "pointer",
+              }}
+            />
+          ) : null}
+          <div
+            ref={questionMarkRef}
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
+          >
+            <MdQuestionMark
+              style={{
+                cursor: "pointer",
+              }}
+            />
+          </div>
+        </HeaderButtons>
       </CardHeader>
       <CardBody>
-        <SlotDropZone slot={slot} mapping={mapping[slot.name]} />
+        <SlotDropZone
+          slot={slot}
+          mapping={mapping[slot.name]}
+          clear={() => removeMapping(slot.name)}
+        />
       </CardBody>
-      <CardFooter>
-        <CardActionButton
-          onClick={() => {
-            removeMapping(slot.name);
-          }}
-        >
-          <MdClear /> Clear
-        </CardActionButton>
-      </CardFooter>
       {showTooltip && (
         <Tooltip anchorEl={questionMarkRef.current}>{slot.description}</Tooltip>
       )}

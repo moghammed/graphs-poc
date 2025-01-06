@@ -89,7 +89,7 @@
         "allowedTypes": ["number", "boolean"],
         "description": "The size of the data that will be displayed on the bubble chart.",
         "id": "size",
-        "required": true
+        "required": false
       },
       {
         "name": "color",

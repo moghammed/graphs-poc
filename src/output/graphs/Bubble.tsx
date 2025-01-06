@@ -1,6 +1,4 @@
-import { MouseEvent, useMemo } from "react";
-import { localPoint } from "@visx/event";
-import styled from "@emotion/styled";
+import { useMemo } from "react";
 import { useTooltip } from "@visx/tooltip";
 import { scaleOrdinal, scaleLinear } from "@visx/scale";
 import { schemePaired } from "d3-scale-chromatic";
@@ -12,17 +10,7 @@ import { AxisBottom, AxisLeft } from "@visx/axis";
 import { useStore } from "../../store/store";
 import { dataAtom } from "../../input";
 import { applyFilters } from "../../util/applyFilters";
-
-const Tooltip = styled.div`
-  position: fixed;
-  padding: 8px 12px;
-  background: #333;
-  color: white;
-  border-radius: 4px;
-  font-size: 14px;
-  max-width: 250px;
-  z-index: 1000;
-`;
+import { handleMouseOver, Tooltip } from "./common";
 
 export const BubbleChart = () => {
   const { mapping } = useStore();
@@ -47,26 +35,11 @@ export const BubbleChart = () => {
   const width = 800;
   const height = 600;
 
-  const xAxisHeight = 40;
-  const yAxisWidth = 40;
+  const xAxisHeight = 20;
+  const yAxisWidth = 20;
 
   const innerHeight = height - margin.top - margin.bottom - xAxisHeight;
   const innerWidth = width - margin.left - margin.right - yAxisWidth;
-
-  const handleMouseOver = (
-    event: MouseEvent<SVGCircleElement>,
-    datum: { label: string; x: number; y: number; size: number }
-  ) => {
-    const coords = localPoint(
-      (event.target as any).ownerSVGElement as any,
-      event
-    );
-    showTooltip({
-      tooltipLeft: (coords?.x ?? 0) + 10,
-      tooltipTop: coords?.y ? coords.y + 200 - window.scrollY : 0,
-      tooltipData: datum,
-    });
-  };
 
   const bubbleData = data
     .map((d) => {
@@ -84,8 +57,8 @@ export const BubbleChart = () => {
     })
     .filter((d) => !isNaN(d.x) && !isNaN(d.y) && !isNaN(d.size));
 
-  const xMax = innerWidth - margin.right;
-  const yMax = innerHeight - margin.bottom - xAxisHeight;
+  const xMax = innerWidth;
+  const yMax = innerHeight;
   const xMin = margin.left;
 
   const minX = Math.min(...bubbleData.map((d) => d.x));
@@ -149,7 +122,12 @@ export const BubbleChart = () => {
                 r={r}
                 fill={getColor(d.color)}
                 opacity={0.7}
-                onMouseMove={(e) => handleMouseOver(e, d)}
+                onMouseMove={(e) =>
+                  handleMouseOver(showTooltip)(e, {
+                    label: d.label,
+                    value: d.size,
+                  })
+                }
                 onMouseLeave={hideTooltip}
               />
             );
@@ -158,7 +136,7 @@ export const BubbleChart = () => {
         <Group top={margin.top} left={margin.left}>
           <AxisBottom
             scale={xScale}
-            top={innerHeight - xAxisHeight - margin.bottom}
+            top={innerHeight}
             left={yAxisWidth}
             numTicks={10}
             tickLabelProps={() => ({

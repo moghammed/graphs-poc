@@ -63,12 +63,12 @@ Built in a weekend to test my rapid prototyping capabilities and learn some new 
   - [x] Next button should be at the bottom of the page
   - [x] remove the "back" button
   - [ ] add a "reset" button
-  - [ ] hide column draggables until chart is selected
-  - [ ] Move column draggables
-  - [ ] Make filters a floating panel
-  - [ ] change clear item to eraser
-  - [ ] unify styling of drop zone and column draggables
-  - [ ] styling of left menu
+  - [x] hide column draggables until chart is selected
+  - [x] Move column draggables
+  - [x] Make filters a floating panel
+  - [ ] Make clear button more subtle
+  - [x] unify styling of drop zone and column draggables
+  - [x] styling of left menu
 
 - [ ] Improve UI
 

@@ -32,12 +32,13 @@ export type DateFilterOperator =
 export type FilterOperator =
   | NumberFilterOperator
   | StringFilterOperator
+  | DateFilterOperator
   | BooleanFilterOperator;
 
 export type Filter = {
   id: string;
   column: ColumnConfig;
-  value: string;
+  value: string | boolean | Date | number;
   operator: FilterOperator;
 };
 

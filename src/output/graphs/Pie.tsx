@@ -1,27 +1,15 @@
 import { useAtom } from "jotai";
-import { localPoint } from "@visx/event";
 import Pie from "@visx/shape/lib/shapes/Pie";
 import { scaleOrdinal } from "@visx/scale";
 import { Group } from "@visx/group";
 import { useTooltip } from "@visx/tooltip";
-import { MouseEvent, useMemo } from "react";
-import styled from "@emotion/styled";
+import { useMemo } from "react";
 import { schemePaired } from "d3-scale-chromatic";
 
 import { useStore } from "../../store/store";
 import { dataAtom } from "../../input";
 import { applyFilters } from "../../util/applyFilters";
-
-const Tooltip = styled.div`
-  position: fixed;
-  padding: 8px 12px;
-  background: #333;
-  color: white;
-  border-radius: 4px;
-  font-size: 14px;
-  max-width: 250px;
-  z-index: 1000;
-`;
+import { handleMouseOver, Tooltip } from "./common";
 
 export const PieChart = () => {
   const [unfilteredData] = useAtom(dataAtom);
@@ -62,21 +50,6 @@ export const PieChart = () => {
   const centerX = innerWidth / 2;
   const centerY = innerHeight / 2;
 
-  const handleMouseOver = (
-    event: MouseEvent<SVGPathElement>,
-    datum: { label: string; value: number }
-  ) => {
-    const coords = localPoint(
-      (event.target as any).ownerSVGElement as any,
-      event
-    );
-    showTooltip({
-      tooltipLeft: (coords?.x ?? 0) + 10,
-      tooltipTop: (coords?.y ?? 0) + 200 - window.scrollY,
-      tooltipData: datum,
-    });
-  };
-
   const getColor = scaleOrdinal({
     domain: pieData.map((d) => d.color),
     range: schemePaired as any,
@@ -85,7 +58,12 @@ export const PieChart = () => {
 
   return (
     <>
-      <svg width={width} height={height}>
+      <svg
+        width={width}
+        height={height}
+        style={{ background: "#f0f0f0" }}
+        id="chart-svg"
+      >
         <Group top={centerY + margin.top} left={centerX + margin.left}>
           <Pie
             data={pieData}
@@ -99,7 +77,9 @@ export const PieChart = () => {
                   key={arc.data.label}
                   d={pie.path(arc)!}
                   fill={getColor(arc.data.color)}
-                  onMouseMove={(event) => handleMouseOver(event, arc.data)}
+                  onMouseMove={(event) =>
+                    handleMouseOver(showTooltip)(event, arc.data)
+                  }
                   onMouseOut={hideTooltip}
                 />
               ));

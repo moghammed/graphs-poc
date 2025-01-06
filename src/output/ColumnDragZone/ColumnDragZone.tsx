@@ -7,10 +7,9 @@ const ColumnDragZoneContainer = styled.div`
   flex: 0 0 auto;
   display: flex;
   flex-direction: row;
-  align-items: start;
-  justify-content: start;
-  width: 100vw;
-  height: 100px;
+  justify-content: center;
+  width: 100%;
+  gap: 10px;
 `;
 
 export const ColumnDragZone = () => {

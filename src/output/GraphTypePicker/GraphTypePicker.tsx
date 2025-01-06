@@ -7,9 +7,10 @@ export type Slot = GraphType["slots"][number];
 
 const GraphTypePickerContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  height: 100vh;
-  width: 150px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px;
 `;
 
 export const GraphTypePicker = () => {

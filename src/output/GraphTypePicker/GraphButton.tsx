@@ -4,8 +4,11 @@ import { useAtom } from "jotai";
 import { GraphTypeAtom } from "..";
 
 const GraphButtonCmp = styled.button`
-  background-color: #000;
-  color: #fff;
+  color: #000;
+  background-color: #bbb;
+  border: 1px solid #000;
+  padding: 5px;
+  border-radius: 5px;
 `;
 
 export const GraphButton = ({ graphType }: { graphType: GraphType }) => {

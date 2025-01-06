@@ -4,9 +4,10 @@ const getNumberInput = (filter: Filter, onChange: (value: number) => void) => {
   if (filter.operator === "equals") {
     return (options: string[]) => (
       <select
-        value={filter.value}
+        value={filter.value.toString()}
         onChange={(e) => onChange(Number.parseFloat(e.target.value))}
       >
+        <option value="">Select</option>
         {options.map((option) => (
           <option key={option} value={option}>
             {option}
@@ -18,7 +19,7 @@ const getNumberInput = (filter: Filter, onChange: (value: number) => void) => {
     return () => (
       <input
         type="number"
-        value={filter.value}
+        value={filter.value.toString()}
         onChange={(e) => onChange(Number.parseFloat(e.target.value))}
       />
     );
@@ -28,7 +29,10 @@ const getNumberInput = (filter: Filter, onChange: (value: number) => void) => {
 const getStringInput = (filter: Filter, onChange: (value: string) => void) => {
   if (filter.operator === "equals") {
     return (options: string[]) => (
-      <select value={filter.value} onChange={(e) => onChange(e.target.value)}>
+      <select
+        value={filter.value.toString()}
+        onChange={(e) => onChange(e.target.value)}
+      >
         {options.map((option) => (
           <option key={option} value={option}>
             {option}
@@ -41,7 +45,7 @@ const getStringInput = (filter: Filter, onChange: (value: string) => void) => {
     return () => (
       <input
         type="text"
-        value={filter.value}
+        value={filter.value.toString()}
         onChange={(e) => onChange(e.target.value)}
       />
     );
@@ -55,8 +59,8 @@ const getBooleanInput = (
   return () => (
     <input
       type="checkbox"
-      checked={filter.value === "true"}
-      onChange={(e) => onChange(e.target.checked ? true : false)}
+      checked={filter.value === true}
+      onClick={(e) => onChange((e.target as HTMLInputElement).checked)}
     />
   );
 };
@@ -65,7 +69,11 @@ const getDateInput = (filter: Filter, onChange: (value: string) => void) => {
   return () => (
     <input
       type="date"
-      value={filter.value}
+      value={
+        new Date(typeof filter.value !== "boolean" ? filter.value : Date.now())
+          .toISOString()
+          .split("T")[0]
+      }
       onChange={(e) => onChange(e.target.value)}
     />
   );

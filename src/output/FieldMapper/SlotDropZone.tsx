@@ -1,10 +1,12 @@
 import { useDroppable } from "@dnd-kit/core";
 import { Slot } from "../GraphTypePicker/GraphTypePicker";
 import styled from "@emotion/styled";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { draggingColumnAtom } from "../../App";
-import { MdCheck, MdClose } from "react-icons/md";
+import { MdCheck, MdClear, MdClose } from "react-icons/md";
 import { getAllowedTypesIcons } from "./SlotCard";
+import { getColumnTypeIcon } from "../ColumnDragZone/ColumnDraggable";
+import { ColumnConfigAtom } from "../../input/ColumnConfig";
 
 const SlotDropZoneContainer = styled.div<{ allowed?: boolean }>`
   display: flex;
@@ -13,18 +15,38 @@ const SlotDropZoneContainer = styled.div<{ allowed?: boolean }>`
   flex-direction: row;
   align-items: center;
   height: 50px;
-  width: 150px;
+  width: 250px;
   background-color: ${({ allowed }) =>
     allowed === undefined ? "gray" : allowed ? "green" : "red"};
+`;
+
+const DroppedColumn = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  border: 1px solid #fff;
+  border-radius: 4px;
+  padding: 4px;
+  gap: 4px;
+  background-color: #0070f3;
+  color: #fff;
 `;
 
 export const SlotDropZone = ({
   slot,
   mapping,
+  clear,
 }: {
   slot: Slot;
   mapping: string;
+  clear: () => void;
 }) => {
+  const columns = useAtomValue(ColumnConfigAtom);
+  const column = mapping
+    ? columns.find((column) => column.name === mapping)
+    : null;
+
   const { setNodeRef } = useDroppable({
     id: slot.name,
     data: {
@@ -33,8 +55,6 @@ export const SlotDropZone = ({
   });
 
   const [draggingColumn] = useAtom(draggingColumnAtom);
-
-  console.log(draggingColumn);
 
   return (
     <SlotDropZoneContainer
@@ -49,7 +69,9 @@ export const SlotDropZone = ({
         mapping ? (
           <>
             <MdCheck color="green" size={40} />
-            {mapping}
+            <DroppedColumn>
+              {mapping} {column ? getColumnTypeIcon(column) : null}
+            </DroppedColumn>
           </>
         ) : (
           <>
@@ -60,7 +82,7 @@ export const SlotDropZone = ({
       ) : mapping ? (
         mapping
       ) : (
-        getAllowedTypesIcons(slot)
+        <>Drop Columns here: {getAllowedTypesIcons(slot)}</>
       )}
     </SlotDropZoneContainer>
   );

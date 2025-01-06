@@ -6,6 +6,7 @@ import styled from "@emotion/styled";
 import {
   MdCalendarMonth,
   MdCheckBox,
+  MdDragIndicator,
   MdNumbers,
   MdTextFields,
 } from "react-icons/md";
@@ -15,11 +16,12 @@ type ColumnDraggableProps = {
 };
 
 const ColumnDraggableContainer = styled.div`
-  padding: 10px;
-  background-color: #242424;
+  padding: 5px;
+
+  background-color: #0070f3;
+  color: #fff;
   border: 1px solid #ccc;
   border-radius: 5px;
-  color: #fff;
   cursor: grab;
   display: flex;
   flex-direction: row;
@@ -28,7 +30,7 @@ const ColumnDraggableContainer = styled.div`
   gap: 10px;
 `;
 
-const getColumnTypeIcon = (column: ColumnConfig) => {
+export const getColumnTypeIcon = (column: ColumnConfig) => {
   if (column.type === "string") {
     return <MdTextFields />;
   }
@@ -63,6 +65,7 @@ export const ColumnDraggable = ({ column }: ColumnDraggableProps) => {
       {...listeners}
       {...attributes}
     >
+      <MdDragIndicator size={24} />
       {column.name}
       {getColumnTypeIcon(column)}
     </ColumnDraggableContainer>

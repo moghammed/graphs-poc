@@ -8,6 +8,7 @@ import { dataAtom } from "../../input";
 import { uniq } from "ramda";
 import { getInput } from "../../util/inputs";
 import { MdDelete } from "react-icons/md";
+import { getDefaultValue } from "./FilterConfigurator";
 
 const FilterCardContainer = styled.div`
   position: relative;
@@ -16,10 +17,14 @@ const FilterCardContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   min-width: 200px;
-  border: 1px solid #000;
-  border-radius: 5px;
+  border-bottom: 1px solid #fff;
   padding: 10px;
   gap: 5px;
+  background-color: #333;
+
+  &:nth-child(odd) {
+    background-color: #666;
+  }
 `;
 
 const DeleteButton = styled.button`
@@ -52,6 +57,9 @@ export const FilterCard = ({ filter }: { filter: Filter }) => {
           updateFilter(filter.id, {
             ...filter,
             column: columns.find((c) => c.name === e.target.value)!,
+            value: getDefaultValue(
+              columns.find((c) => c.name === e.target.value)!
+            ),
           })
         }
       >
