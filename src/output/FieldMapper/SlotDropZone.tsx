@@ -3,7 +3,7 @@ import { Slot } from "../GraphTypePicker/GraphTypePicker";
 import styled from "@emotion/styled";
 import { useAtom, useAtomValue } from "jotai";
 import { draggingColumnAtom } from "../../App";
-import { MdCheck, MdClear, MdClose } from "react-icons/md";
+import { MdCheck, MdClose } from "react-icons/md";
 import { getAllowedTypesIcons } from "./SlotCard";
 import { getColumnTypeIcon } from "../ColumnDragZone/ColumnDraggable";
 import { ColumnConfigAtom } from "../../input/ColumnConfig";
@@ -36,11 +36,9 @@ const DroppedColumn = styled.div`
 export const SlotDropZone = ({
   slot,
   mapping,
-  clear,
 }: {
   slot: Slot;
   mapping: string;
-  clear: () => void;
 }) => {
   const columns = useAtomValue(ColumnConfigAtom);
   const column = mapping

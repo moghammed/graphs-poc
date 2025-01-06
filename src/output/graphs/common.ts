@@ -27,14 +27,13 @@ export const handleMouseOver =
     showTooltip({
       tooltipLeft:
         (point?.x ?? 0) -
-          (event.target as any).ownerSVGElement.getBoundingClientRect().width /
-            2 ?? 0,
+        (event.target as any).ownerSVGElement.getBoundingClientRect().width / 2,
       tooltipTop:
         (point?.y ?? 0) +
-          20 +
-          parentRect?.top -
-          parentRect?.height +
-          window.scrollY ?? 0,
+        20 +
+        parentRect?.top -
+        parentRect?.height +
+        window.scrollY,
       tooltipData: datum,
     });
   };

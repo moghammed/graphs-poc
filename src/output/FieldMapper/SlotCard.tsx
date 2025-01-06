@@ -99,11 +99,7 @@ export const SlotCard = ({ slot }: { slot: Slot }) => {
         </HeaderButtons>
       </CardHeader>
       <CardBody>
-        <SlotDropZone
-          slot={slot}
-          mapping={mapping[slot.name]}
-          clear={() => removeMapping(slot.name)}
-        />
+        <SlotDropZone slot={slot} mapping={mapping[slot.name]} />
       </CardBody>
       {showTooltip && (
         <Tooltip anchorEl={questionMarkRef.current}>{slot.description}</Tooltip>
