@@ -22,13 +22,17 @@ export const SlotCard = ({ slot }: { slot: Slot }) => {
   const [showSettings, setShowSettings] = useState(false);
   const questionMarkRef = useRef<HTMLDivElement>(null);
   const settingsRef = useRef<HTMLDivElement>(null);
+
   return (
     <Card sx={{ minWidth: 200, maxWidth: "sm" }}>
       <CardHeader
         title={slot.name}
         action={
           <Stack direction="row" spacing={1} alignItems="center">
-            <Box ref={settingsRef}>
+            <Box
+              ref={settingsRef}
+              sx={{ display: slot.aggregatable !== true ? "none" : "block" }}
+            >
               <IconButton size="small" onClick={() => setShowSettings(true)}>
                 <SettingsIcon />
               </IconButton>
