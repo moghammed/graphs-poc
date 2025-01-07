@@ -50,7 +50,7 @@ export const PieChartCmp = () => {
           : mean((entries ?? []).map((d) => d.value));
 
       return {
-        label,
+        label: `${label}`,
         value: aggregatedValue.toString(),
         color: (entries?.[0]?.color ?? label).toString(),
       };
@@ -124,7 +124,8 @@ export const PieChartCmp = () => {
             transform: `translate(${tooltipLeft ?? 0}px, ${tooltipTop ?? 0}px)`,
           }}
         >
-          {(tooltipData as { label: string }).label}
+          {(tooltipData as { label: string }).label}:{" "}
+          {(tooltipData as { value: string }).value}
         </Tooltip>
       )}
     </>
