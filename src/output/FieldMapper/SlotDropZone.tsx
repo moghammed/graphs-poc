@@ -1,9 +1,16 @@
 import { useDroppable } from "@dnd-kit/core";
 import { Slot } from "../GraphTypePicker/GraphTypePicker";
-import { Box, Paper, Typography, Chip, Stack, IconButton } from "@mui/material";
+import {
+  Paper,
+  Typography,
+  Chip,
+  Stack,
+  IconButton,
+  Theme,
+} from "@mui/material";
 import { useAtom, useAtomValue } from "jotai";
 import { draggingColumnAtom } from "../../App";
-import { Check as MdCheck, Close as MdClose } from "@mui/icons-material";
+import { Close as MdClose } from "@mui/icons-material";
 import { getAllowedTypesIcons } from "./SlotCard";
 import { getColumnTypeIcon } from "../ColumnDragZone/ColumnDraggable";
 import { ColumnConfigAtom } from "../../input/ColumnConfig";
@@ -27,7 +34,7 @@ export const SlotDropZone = ({ slot }: { slot: Slot }) => {
 
   const [draggingColumn] = useAtom(draggingColumnAtom);
 
-  const getBackgroundColor = (theme: any) => {
+  const getBackgroundColor = (theme: Theme) => {
     if (!draggingColumn?.type) return theme.palette.grey[200];
     return slot.allowedTypes.includes(draggingColumn?.type)
       ? theme.palette.success.light

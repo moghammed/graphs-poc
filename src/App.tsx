@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import { Input } from "./input";
 import { Output } from "./output";
-import { atom, useAtom, useSetAtom } from "jotai";
+import { atom, useSetAtom } from "jotai";
 import { ColumnConfig } from "./input/ColumnConfig";
 import { DndContext, DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import { useStore } from "./store/store";

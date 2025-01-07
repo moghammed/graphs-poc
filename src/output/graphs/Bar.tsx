@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { useTooltip } from "@visx/tooltip";
 
 import { scaleOrdinal } from "@visx/scale";
@@ -8,7 +8,7 @@ import { scaleBand, scaleLinear } from "@visx/scale";
 import { Bar } from "@visx/shape";
 import { range } from "ramda";
 
-import { RootState, useStore } from "../../store/store";
+import { useStore } from "../../store/store";
 import { dataAtom } from "../../input";
 import { Group } from "@visx/group";
 import { AxisBottom, AxisLeft } from "@visx/axis";
@@ -89,14 +89,17 @@ export const BarChartCmp = () => {
       scaleLinear<number>({
         range: [yMax, 0],
         round: true,
-        domain: [0, Math.max(...barData.map((d) => d.value))],
+        domain: [
+          0,
+          Math.max(...barData.map((d) => Number.parseFloat(d.value))),
+        ],
       }),
     [yMax, barData]
   );
 
   const getColor = scaleOrdinal({
     domain: barData.map((d) => d.color),
-    range: schemePaired as any,
+    range: schemePaired as string[],
     unknown: "#000",
   });
 
@@ -111,7 +114,7 @@ export const BarChartCmp = () => {
         <Group top={margin.top} left={margin.left + yAxisWidth}>
           {barData.map((d) => {
             const barWidth = xScale.bandwidth();
-            const barHeight = yMax - yScale(d.value ?? 0);
+            const barHeight = yMax - yScale(Number.parseFloat(d.value) ?? 0);
             const barX = xScale(d.x);
             const barY = yMax - barHeight - 2;
 
@@ -123,7 +126,12 @@ export const BarChartCmp = () => {
                 width={barWidth}
                 height={barHeight}
                 fill={getColor(d.color)}
-                onMouseMove={(e) => handleMouseOver(showTooltip)(e, d)}
+                onMouseMove={(e) =>
+                  handleMouseOver(showTooltip)(e, {
+                    label: d.label,
+                    value: Number.parseFloat(d.value),
+                  })
+                }
                 onMouseLeave={hideTooltip}
               />
             );

@@ -1,7 +1,8 @@
 import { ColumnConfig } from "./ColumnConfig";
 
 export const guessColumnTypes = (
-  data: any[],
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: Record<string, any>[],
   fields: string[]
 ): ColumnConfig[] => {
   // Return empty array if no data

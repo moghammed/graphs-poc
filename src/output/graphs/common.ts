@@ -15,14 +15,19 @@ export const Tooltip = styled(Paper)(({ theme }) => ({
 }));
 
 export const handleMouseOver =
-  (showTooltip: (props: any) => void) =>
+  (
+    showTooltip: (props: {
+      tooltipLeft: number;
+      tooltipTop: number;
+      tooltipData: { label: string; value: number };
+    }) => void
+  ) =>
   (event: MouseEvent<SVGElement>, datum: { label: string; value: number }) => {
-    const point = localPoint(
-      (event.target as any).ownerSVGElement as any,
-      event
-    );
+    const parent = document.getElementById("chart-svg");
 
-    const parent = document.getElementById("chart-svg")!;
+    if (!parent) return;
+
+    const point = localPoint(parent, event);
 
     const parentRect = parent.getBoundingClientRect();
 

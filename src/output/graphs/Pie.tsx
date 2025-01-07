@@ -51,7 +51,7 @@ export const PieChart = () => {
 
   const getColor = scaleOrdinal({
     domain: pieData.map((d) => d.color),
-    range: schemePaired as any,
+    range: schemePaired as string[],
     unknown: "#000",
   });
 
@@ -66,7 +66,7 @@ export const PieChart = () => {
         <Group top={centerY + margin.top} left={centerX + margin.left}>
           <Pie
             data={pieData}
-            pieValue={(d) => d.value}
+            pieValue={(d) => Number.parseFloat(d.value)}
             outerRadius={radius}
             innerRadius={0}
           >
@@ -77,7 +77,10 @@ export const PieChart = () => {
                   d={pie.path(arc)!}
                   fill={getColor(arc.data.color)}
                   onMouseMove={(event) =>
-                    handleMouseOver(showTooltip)(event, arc.data)
+                    handleMouseOver(showTooltip)(event, {
+                      label: arc.data.label,
+                      value: Number.parseFloat(arc.data.value),
+                    })
                   }
                   onMouseOut={hideTooltip}
                 />

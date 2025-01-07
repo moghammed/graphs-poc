@@ -18,9 +18,9 @@ export type ColumnConfig = {
 
 export const ColumnConfigAtom = atom<ColumnConfig[]>([]);
 
-const inferType = (value: any): ColumnType => {
+const inferType = (value: string): ColumnType => {
   if (value === undefined || value === null || value === "") return "string";
-  if (!isNaN(value)) return "number";
+  if (!isNaN(Number(value))) return "number";
   if (!isNaN(Date.parse(value))) return "date";
   if (value === "true" || value === "false") return "boolean";
   return "string";
@@ -30,7 +30,8 @@ export const ColumnConfig = ({
   data,
   meta,
 }: {
-  data: any[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: Record<string, any>[];
   meta: { fields: string[] };
 }) => {
   const [columns, setColumns] = useAtom(ColumnConfigAtom);

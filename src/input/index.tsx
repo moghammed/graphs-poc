@@ -5,8 +5,10 @@ import { Box, Button, Typography, styled } from "@mui/material";
 import { SampleDataGallery } from "./SampleDataGallery";
 import { Upload as UploadIcon } from "@mui/icons-material";
 
-export const dataAtom = atom<any[]>([]);
-export const metaAtom = atom<any>(null);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const dataAtom = atom<Record<string, any>[]>([]);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const metaAtom = atom<Record<string, any> | null>(null);
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -29,8 +31,9 @@ export const Input = ({ next }: { next: () => void }) => {
       header: true,
       download: true,
       complete: (results) => {
-        setData(results.data);
-        setMeta(results.meta);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setData(results.data as Record<string, any>[]);
+        setMeta(results.meta as { fields: string[] });
       },
     });
   };
@@ -80,7 +83,7 @@ export const Input = ({ next }: { next: () => void }) => {
       ) : null}
       {data.length > 0 ? (
         <>
-          <ColumnConfig data={data} meta={meta} />
+          <ColumnConfig data={data} meta={meta as { fields: string[] }} />
           <Typography sx={{ mt: 7.5 }}>Looks good?</Typography>
           <Button
             variant="contained"

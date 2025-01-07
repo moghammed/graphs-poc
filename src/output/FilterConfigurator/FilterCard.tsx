@@ -1,4 +1,4 @@
-import { useAtom, useAtomValue } from "jotai";
+import { useAtomValue } from "jotai";
 import { ColumnConfigAtom } from "../../input/ColumnConfig";
 import { Filter, FilterOperator, useStore } from "../../store/store";
 import {

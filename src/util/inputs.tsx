@@ -110,7 +110,10 @@ const getDateInput = (filter: Filter, onChange: (value: string) => void) => {
   );
 };
 
-export const getInput = (filter: Filter, onChange: (value: any) => void) => {
+export const getInput = (
+  filter: Filter,
+  onChange: (value: string | number | boolean | Date) => void
+) => {
   switch (filter.column.type) {
     case "number":
       return getNumberInput(filter, onChange);

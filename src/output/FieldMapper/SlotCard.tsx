@@ -13,7 +13,6 @@ import {
 import {
   CalendarMonth as MdCalendarMonth,
   CheckBox as MdCheckBox,
-  Clear as MdClear,
   Numbers as MdNumbers,
   QuestionMark as MdQuestionMark,
   TextFields as MdTextFields,

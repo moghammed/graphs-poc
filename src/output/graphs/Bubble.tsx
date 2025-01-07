@@ -101,7 +101,7 @@ export const BubbleChart = () => {
 
   const getColor = scaleOrdinal({
     domain: bubbleData.map((d) => d.color),
-    range: schemePaired as any,
+    range: schemePaired as string[],
     unknown: "#000",
   });
 

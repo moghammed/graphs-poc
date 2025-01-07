@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Popper, Paper, Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
@@ -27,19 +26,7 @@ type TooltipProps = {
   children?: React.ReactNode;
 };
 
-export const Tooltip = ({ anchorEl, transform, children }: TooltipProps) => {
-  const [position, setPosition] = useState({ top: 0, left: 0 });
-
-  useEffect(() => {
-    if (anchorEl) {
-      const rect = anchorEl.getBoundingClientRect();
-      setPosition({
-        top: rect.bottom + 8,
-        left: rect.left + rect.width / 2,
-      });
-    }
-  }, [anchorEl]);
-
+export const Tooltip = ({ anchorEl, children }: TooltipProps) => {
   return (
     <Popper
       open={Boolean(anchorEl)}

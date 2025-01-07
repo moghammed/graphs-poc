@@ -1,7 +1,7 @@
 import { ColumnConfig } from "../../input/ColumnConfig";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import { Box, Chip, Paper, Stack } from "@mui/material";
+import { Chip, Stack } from "@mui/material";
 import {
   CalendarMonth as MdCalendarMonth,
   CheckBox as MdCheckBox,

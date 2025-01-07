@@ -1,4 +1,4 @@
-import { Box, Paper, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { GraphType } from "../GraphTypePicker/GraphTypePicker";
 import { SlotCard } from "./SlotCard";
 import { ColumnDragZone } from "../ColumnDragZone/ColumnDragZone";
