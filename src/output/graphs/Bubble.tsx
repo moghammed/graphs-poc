@@ -69,7 +69,7 @@ export const BubbleChartCmp = () => {
         y,
         size: aggregatedSize,
         color: (entries?.[0]?.color ?? "").toString(),
-        label: entries?.[0]?.label ?? `${x}, ${y} (${aggregatedSize})`,
+        label: `${entries?.[0]?.label ?? `${x}, ${y}`}: ${aggregatedSize}`,
       };
     });
   }, [filteredData, mapping]);
@@ -132,9 +132,20 @@ export const BubbleChartCmp = () => {
     unknown: "#000",
   });
 
+  console.log({
+    tooltipLeft,
+    tooltipTop,
+    tooltipData,
+  });
+
   return (
     <>
-      <svg width={width} height={height} style={{ background: "#f0f0f0" }}>
+      <svg
+        width={width}
+        height={height}
+        style={{ background: "#f0f0f0" }}
+        id="chart-svg"
+      >
         <Group top={margin.top} left={margin.left + yAxisWidth}>
           {bubbleData.map((d, i) => {
             const cx = xScale(d.x);
@@ -151,7 +162,7 @@ export const BubbleChartCmp = () => {
                 opacity={0.7}
                 onMouseMove={(e) =>
                   handleMouseOver(showTooltip)(e, {
-                    label: d.label,
+                    label: d.label ?? `${d.x}, ${d.y} (${d.size})`,
                     value: d.size,
                   })
                 }
