@@ -17,6 +17,7 @@
         "allowedTypes": ["number", "date"],
         "description": "The y-axis of the chart. This is the value of the data that will be displayed on the y-axis.",
         "id": "yAxis",
+        "aggregatable": true,
         "required": true
       },
       {
@@ -46,6 +47,7 @@
         "allowedTypes": ["number"],
         "description": "The value of the data that will be displayed on the pie chart.",
         "id": "value",
+        "aggregatable": true,
         "required": true
       },
       {
@@ -89,6 +91,7 @@
         "allowedTypes": ["number", "boolean"],
         "description": "The size of the data that will be displayed on the bubble chart.",
         "id": "size",
+        "aggregatable": true,
         "required": false
       },
       {

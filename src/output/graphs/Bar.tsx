@@ -6,7 +6,7 @@ import { schemePaired } from "d3-scale-chromatic";
 import { useAtom } from "jotai";
 import { scaleBand, scaleLinear } from "@visx/scale";
 import { Bar } from "@visx/shape";
-import { range } from "ramda";
+import { groupBy, mean, range, sum } from "ramda";
 
 import { useStore } from "../../store/store";
 import { dataAtom } from "../../input";
@@ -36,21 +36,53 @@ export const BarChartCmp = () => {
   const colorMapping = useStore((state) => state.mapping["color"]);
   const labelMapping = useStore((state) => state.mapping["label"]);
 
-  const data = useMemo(
+  console.log({
+    xAxisMapping,
+    yAxisMapping,
+    colorMapping,
+    labelMapping,
+  });
+
+  const filteredData = useMemo(
     () => applyFilters(unfilteredData, filters),
     [unfilteredData, filters]
   );
 
-  const barData = useMemo(
-    () =>
-      data.map((d) => ({
-        x: d[xAxisMapping],
-        value: d[yAxisMapping],
-        color: d[colorMapping] ?? d[xAxisMapping],
-        label: d[labelMapping] ?? `${d[xAxisMapping]}: ${d[yAxisMapping]}`,
-      })),
-    [data, xAxisMapping, yAxisMapping, colorMapping, labelMapping]
-  );
+  const data = useMemo(() => {
+    const aggregationType = yAxisMapping.aggregation;
+    const groups = groupBy(
+      (d) => d.x,
+      filteredData.map((d) => ({
+        x: d[xAxisMapping.column],
+        value: d[yAxisMapping.column],
+        color: d[colorMapping?.column] ?? null,
+        label: d[labelMapping?.column],
+      }))
+    );
+
+    return Object.entries(groups).map(([key, entries]) => {
+      const aggregatedValue =
+        aggregationType === "sum"
+          ? sum((entries ?? []).map((d) => Number.parseFloat(d.value)))
+          : mean((entries ?? []).map((d) => Number.parseFloat(d.value)));
+
+      return {
+        x: key,
+        value: aggregatedValue,
+        color: entries?.[0].color ?? aggregatedValue,
+        label: entries?.[0].label ?? `${entries?.[0].x}: ${aggregatedValue}`,
+      };
+    });
+  }, [
+    filteredData,
+    xAxisMapping,
+    colorMapping,
+    labelMapping,
+    yAxisMapping.aggregation,
+    yAxisMapping.column,
+  ]);
+
+  const barData = data;
 
   const {
     tooltipData,
@@ -89,10 +121,7 @@ export const BarChartCmp = () => {
       scaleLinear<number>({
         range: [yMax, 0],
         round: true,
-        domain: [
-          0,
-          Math.max(...barData.map((d) => Number.parseFloat(d.value))),
-        ],
+        domain: [0, Math.max(...barData.map((d) => d.value))],
       }),
     [yMax, barData]
   );
@@ -114,7 +143,7 @@ export const BarChartCmp = () => {
         <Group top={margin.top} left={margin.left + yAxisWidth}>
           {barData.map((d) => {
             const barWidth = xScale.bandwidth();
-            const barHeight = yMax - yScale(Number.parseFloat(d.value) ?? 0);
+            const barHeight = yMax - yScale(d.value ?? 0);
             const barX = xScale(d.x);
             const barY = yMax - barHeight - 2;
 
@@ -128,8 +157,8 @@ export const BarChartCmp = () => {
                 fill={getColor(d.color)}
                 onMouseMove={(e) =>
                   handleMouseOver(showTooltip)(e, {
-                    label: d.label,
-                    value: Number.parseFloat(d.value),
+                    label: d.label ?? "",
+                    value: d.value,
                   })
                 }
                 onMouseLeave={hideTooltip}

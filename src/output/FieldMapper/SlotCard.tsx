@@ -8,63 +8,31 @@ import {
   CardHeader,
   IconButton,
   Stack,
-  Tooltip as MuiTooltip,
 } from "@mui/material";
 import {
-  CalendarMonth as MdCalendarMonth,
-  CheckBox as MdCheckBox,
-  Numbers as MdNumbers,
   QuestionMark as MdQuestionMark,
-  TextFields as MdTextFields,
+  Settings as SettingsIcon,
 } from "@mui/icons-material";
 import { SlotDropZone } from "./SlotDropZone";
-
-export const getAllowedTypesIcons = (slot: Slot) => {
-  return slot.allowedTypes
-    .map((type) => {
-      if (type === "string") {
-        return (
-          <MuiTooltip key="string" title="Text">
-            <MdTextFields fontSize="small" />
-          </MuiTooltip>
-        );
-      }
-      if (type === "number") {
-        return (
-          <MuiTooltip key="number" title="Number">
-            <MdNumbers fontSize="small" />
-          </MuiTooltip>
-        );
-      }
-      if (type === "date") {
-        return (
-          <MuiTooltip key="date" title="Date">
-            <MdCalendarMonth fontSize="small" />
-          </MuiTooltip>
-        );
-      }
-      if (type === "boolean") {
-        return (
-          <MuiTooltip key="boolean" title="Boolean">
-            <MdCheckBox fontSize="small" />
-          </MuiTooltip>
-        );
-      }
-      return null;
-    })
-    .filter(Boolean);
-};
+import { Settings } from "./Settings";
+// import { AggregationConfiguration } from "./AggregationConfiguration";
 
 export const SlotCard = ({ slot }: { slot: Slot }) => {
   const [showTooltip, setShowTooltip] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const questionMarkRef = useRef<HTMLDivElement>(null);
-
+  const settingsRef = useRef<HTMLDivElement>(null);
   return (
     <Card sx={{ minWidth: 200, maxWidth: "sm" }}>
       <CardHeader
         title={slot.name}
         action={
           <Stack direction="row" spacing={1} alignItems="center">
+            <Box ref={settingsRef}>
+              <IconButton size="small" onClick={() => setShowSettings(true)}>
+                <SettingsIcon />
+              </IconButton>
+            </Box>
             <Box
               ref={questionMarkRef}
               onMouseEnter={() => setShowTooltip(true)}
@@ -91,6 +59,13 @@ export const SlotCard = ({ slot }: { slot: Slot }) => {
       </CardContent>
       {showTooltip && (
         <Tooltip anchorEl={questionMarkRef.current}>{slot.description}</Tooltip>
+      )}
+      {showSettings && (
+        <Settings
+          slot={slot}
+          anchorEl={settingsRef.current}
+          close={() => setShowSettings(false)}
+        />
       )}
     </Card>
   );

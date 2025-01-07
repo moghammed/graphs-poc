@@ -5,7 +5,7 @@ import { Output } from "./output";
 import { atom, useSetAtom } from "jotai";
 import { ColumnConfig } from "./input/ColumnConfig";
 import { DndContext, DragEndEvent, DragStartEvent } from "@dnd-kit/core";
-import { useStore } from "./store/store";
+import { Mapping, useStore } from "./store/store";
 import { ThemeProvider, createTheme, CssBaseline, Box } from "@mui/material";
 
 enum Step {
@@ -69,7 +69,10 @@ function App() {
     ) {
       addMapping(
         event.over?.id as string,
-        event.active.data.current?.name as string
+        {
+          column: event.active.data.current?.name as string,
+          aggregation: "sum",
+        } as Mapping
       );
     }
   };

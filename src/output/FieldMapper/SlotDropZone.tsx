@@ -11,14 +11,14 @@ import {
 import { useAtom, useAtomValue } from "jotai";
 import { draggingColumnAtom } from "../../App";
 import { Close as MdClose } from "@mui/icons-material";
-import { getAllowedTypesIcons } from "./SlotCard";
+import { getAllowedTypesIcons } from "./getAllowedTypesIcons";
 import { getColumnTypeIcon } from "../ColumnDragZone/ColumnDraggable";
 import { ColumnConfigAtom } from "../../input/ColumnConfig";
 import { useStore } from "../../store/store";
 
 export const SlotDropZone = ({ slot }: { slot: Slot }) => {
   const removeMapping = useStore((state) => state.removeMapping);
-  const mapping = useStore((state) => state.mapping[slot.name]);
+  const mapping = useStore((state) => state.mapping[slot.name]?.column);
 
   const columns = useAtomValue(ColumnConfigAtom);
   const column = mapping

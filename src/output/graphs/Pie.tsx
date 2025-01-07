@@ -5,20 +5,57 @@ import { Group } from "@visx/group";
 import { useTooltip } from "@visx/tooltip";
 import { useMemo } from "react";
 import { schemePaired } from "d3-scale-chromatic";
+import { groupBy, mean, sum } from "ramda";
 
 import { useStore } from "../../store/store";
 import { dataAtom } from "../../input";
 import { applyFilters } from "../../util/applyFilters";
 import { handleMouseOver, Tooltip } from "./common";
+import GraphTypes from "../../graphTypes.json";
+
+const PieType = GraphTypes.find((graphType) => graphType.id === "pie")!;
 
 export const PieChart = () => {
+  const mapping = useStore((state) => state.mapping);
+  const hasAllRequiredMappings = PieType.slots.every((slot) =>
+    slot.required ? mapping[slot.name] !== undefined : true
+  );
+  return hasAllRequiredMappings ? <PieChartCmp /> : null;
+};
+
+export const PieChartCmp = () => {
   const [unfilteredData] = useAtom(dataAtom);
   const mapping = useStore((state) => state.mapping);
   const filters = useStore((state) => state.filters);
-  const data = useMemo(
+  const filteredData = useMemo(
     () => applyFilters(unfilteredData, filters),
     [unfilteredData, filters]
   );
+
+  const pieData = useMemo(() => {
+    const groups = groupBy(
+      (d) => d.label,
+      filteredData.map((row) => ({
+        label: row[mapping["label"]?.column],
+        value: parseFloat(row[mapping["value"].column]),
+        color: row[mapping["color"]?.column] ?? row[mapping["label"]?.column],
+      }))
+    );
+
+    return Object.entries(groups).map(([label, entries]) => {
+      const aggregationType = mapping["value"].aggregation;
+      const aggregatedValue =
+        aggregationType === "sum"
+          ? sum((entries ?? []).map((d) => d.value))
+          : mean((entries ?? []).map((d) => d.value));
+
+      return {
+        label,
+        value: aggregatedValue.toString(),
+        color: (entries?.[0]?.color ?? label).toString(),
+      };
+    });
+  }, [filteredData, mapping]);
 
   const {
     tooltipData,
@@ -28,14 +65,6 @@ export const PieChart = () => {
     showTooltip,
     hideTooltip,
   } = useTooltip();
-
-  const pieData = data.map((row) => {
-    return {
-      label: row[mapping["label"]],
-      value: row[mapping["value"]],
-      color: row[mapping["color"]] ?? row[mapping["label"]],
-    };
-  });
 
   const margin = { top: 20, right: 20, bottom: 20, left: 20 };
   const width = 800;

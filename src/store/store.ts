@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { ColumnConfig } from "../input/ColumnConfig";
 
+export type AggregationType = "sum" | "average";
 export type NumberFilterOperator =
   | "equals"
   | "not_equals"
@@ -47,12 +48,18 @@ export type RootState = {
   filters: Record<string, Filter>;
 };
 
+export type Mapping = {
+  column: string;
+  aggregation: AggregationType;
+};
+
 export const useStore = create<{
-  mapping: Record<string, string>;
+  mapping: Record<string, Mapping>;
   filters: Record<string, Filter>;
-  setMapping: (mapping: Record<string, string>) => void;
-  addMapping: (key: string, value: string) => void;
+  setMapping: (mapping: Record<string, Mapping>) => void;
+  addMapping: (key: string, value: Mapping) => void;
   removeMapping: (key: string) => void;
+  updateMapping: (key: string, value: Mapping) => void;
   setFilters: (filters: Record<string, Filter>) => void;
   addFilter: (filter: Filter) => void;
   removeFilter: (id: string) => void;
@@ -60,10 +67,10 @@ export const useStore = create<{
 }>((set) => ({
   mapping: {},
   filters: {},
-  setMapping: (mapping: Record<string, string>) => {
+  setMapping: (mapping: Record<string, Mapping>) => {
     set({ mapping });
   },
-  addMapping: (key: string, value: string) => {
+  addMapping: (key: string, value: Mapping) => {
     set((state) => ({
       mapping: { ...state.mapping, [key]: value },
     }));
@@ -73,6 +80,11 @@ export const useStore = create<{
       mapping: Object.fromEntries(
         Object.entries(state.mapping).filter(([k]) => k !== key)
       ),
+    }));
+  },
+  updateMapping: (key: string, value: Mapping) => {
+    set((state) => ({
+      mapping: { ...state.mapping, [key]: value },
     }));
   },
   setFilters: (filters: Record<string, Filter>) => {
