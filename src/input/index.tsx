@@ -1,31 +1,24 @@
 import { atom, useAtom } from "jotai";
 import Papa from "papaparse";
 import { ColumnConfig } from "./ColumnConfig";
-import styled from "@emotion/styled";
+import { Box, Button, Typography, styled } from "@mui/material";
 import { SampleDataGallery } from "./SampleDataGallery";
+import { Upload as UploadIcon } from "@mui/icons-material";
 
 export const dataAtom = atom<any[]>([]);
 export const metaAtom = atom<any>(null);
 
-const ExplanationContainer = styled.div`
-  margin-bottom: 20px;
-  max-width: 600px;
-
-  h1 {
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 1em;
-  }
-`;
-
-const NextStepButton = styled.button`
-  margin-top: 20px;
-  background-color: #0070f3;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-`;
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
 
 export const Input = ({ next }: { next: () => void }) => {
   const [data, setData] = useAtom(dataAtom);
@@ -50,30 +43,61 @@ export const Input = ({ next }: { next: () => void }) => {
   };
 
   return (
-    <div>
+    <Box>
       {data.length < 1 ? (
         <>
-          <ExplanationContainer>
-            <h1>Upload a TSV or CSV file and explore your data</h1>
-            <p>
+          <Box sx={{ mb: 2.5, maxWidth: 600 }}>
+            <Typography variant="h4" sx={{ mb: 1, fontWeight: 600 }}>
+              Upload a TSV or CSV file and explore your data
+            </Typography>
+            <Typography>
               This tool will help you explore your data by allowing you to map
               columns to fields, apply filters, and view your data in different
               kinds of graphs.
-            </p>
-          </ExplanationContainer>
-          <input type="file" onChange={handleFileChange} />
+            </Typography>
+          </Box>
+          <Button
+            component="label"
+            variant="contained"
+            startIcon={<UploadIcon />}
+            sx={{
+              mb: 3,
+              bgcolor: (theme) => theme.palette.primary.main,
+              "&:hover": {
+                bgcolor: (theme) => theme.palette.primary.dark,
+              },
+            }}
+          >
+            Upload file
+            <VisuallyHiddenInput
+              type="file"
+              onChange={handleFileChange}
+              accept=".csv,.tsv"
+            />
+          </Button>
           <SampleDataGallery parseFile={parseFile} />
         </>
       ) : null}
       {data.length > 0 ? (
         <>
           <ColumnConfig data={data} meta={meta} />
-          <p style={{ marginTop: "60px" }}>All done?</p>
-          <NextStepButton onClick={next}>
+          <Typography sx={{ mt: 7.5 }}>Looks good?</Typography>
+          <Button
+            variant="contained"
+            onClick={next}
+            sx={{
+              mt: 1,
+              bgcolor: (theme) => theme.palette.primary.main,
+              color: "white",
+              "&:hover": {
+                bgcolor: (theme) => theme.palette.primary.dark,
+              },
+            }}
+          >
             Let's see your data in action
-          </NextStepButton>
+          </Button>
         </>
       ) : null}
-    </div>
+    </Box>
   );
 };

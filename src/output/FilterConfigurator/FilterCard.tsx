@@ -1,95 +1,109 @@
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { ColumnConfigAtom } from "../../input/ColumnConfig";
 import { Filter, FilterOperator, useStore } from "../../store/store";
-import styled from "@emotion/styled";
+import {
+  Box,
+  IconButton,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 import { getOperators } from "../../util/operators";
 import { useMemo } from "react";
 import { dataAtom } from "../../input";
 import { uniq } from "ramda";
 import { getInput } from "../../util/inputs";
-import { MdDelete } from "react-icons/md";
+import { Delete as MdDelete } from "@mui/icons-material";
 import { getDefaultValue } from "./FilterConfigurator";
-
-const FilterCardContainer = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  min-width: 200px;
-  border-bottom: 1px solid #fff;
-  padding: 10px;
-  gap: 5px;
-  background-color: #333;
-
-  &:nth-child(odd) {
-    background-color: #666;
-  }
-`;
-
-const DeleteButton = styled.button`
-  background: red;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 5px;
-`;
 
 export const FilterCard = ({ filter }: { filter: Filter }) => {
   const columnType = filter.column.type;
-
-  const [data] = useAtom(dataAtom);
-
+  const data = useAtomValue(dataAtom);
   const availableOperators = getOperators(columnType);
-
-  const { updateFilter, removeFilter } = useStore();
-  const [columns] = useAtom(ColumnConfigAtom);
+  const columns = useAtomValue(ColumnConfigAtom);
+  const updateFilter = useStore((state) => state.updateFilter);
+  const removeFilter = useStore((state) => state.removeFilter);
 
   const uniqueValues = useMemo(() => {
     return uniq(data.map((d) => d[filter.column.name]));
   }, [data, filter.column.name]);
 
   return (
-    <FilterCardContainer>
-      <select
-        value={filter.column.name}
-        onChange={(e) =>
-          updateFilter(filter.id, {
-            ...filter,
-            column: columns.find((c) => c.name === e.target.value)!,
-            value: getDefaultValue(
-              columns.find((c) => c.name === e.target.value)!
-            ),
-          })
-        }
-      >
-        {columns.map((column) => (
-          <option key={column.name} value={column.name}>
-            {column.name}
-          </option>
-        ))}
-      </select>
-      <select
-        value={filter.operator}
-        onChange={(e) =>
-          updateFilter(filter.id, {
-            ...filter,
-            operator: e.target.value as FilterOperator,
-          })
-        }
-      >
-        {availableOperators.map((operator) => (
-          <option key={operator} value={operator as FilterOperator}>
-            {operator}
-          </option>
-        ))}
-      </select>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        minWidth: "200px",
+        borderBottom: "1px solid",
+        borderColor: "divider",
+        p: 1,
+        gap: 1,
+        bgcolor: (theme) =>
+          theme.palette.mode === "dark" ? "grey.800" : "grey.100",
+        "&:nth-of-type(odd)": {
+          bgcolor: (theme) =>
+            theme.palette.mode === "dark" ? "grey.900" : "grey.50",
+        },
+      }}
+    >
+      <FormControl size="small" sx={{ minWidth: 120 }}>
+        <InputLabel>Column</InputLabel>
+        <Select
+          value={filter.column.name}
+          label="Column"
+          onChange={(e) =>
+            updateFilter(filter.id, {
+              ...filter,
+              column: columns.find((c) => c.name === e.target.value)!,
+              value: getDefaultValue(
+                columns.find((c) => c.name === e.target.value)!
+              ),
+            })
+          }
+        >
+          {columns.map((column) => (
+            <MenuItem key={column.name} value={column.name}>
+              {column.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
+      <FormControl size="small" sx={{ minWidth: 120 }}>
+        <InputLabel>Operator</InputLabel>
+        <Select
+          value={filter.operator}
+          label="Operator"
+          onChange={(e) =>
+            updateFilter(filter.id, {
+              ...filter,
+              operator: e.target.value as FilterOperator,
+            })
+          }
+        >
+          {availableOperators.map((operator) => (
+            <MenuItem key={operator.value} value={operator.value}>
+              {operator.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
       {getInput(filter, (value) =>
         updateFilter(filter.id, { ...filter, value })
       )(uniqueValues)}
-      <DeleteButton onClick={() => removeFilter(filter.id)}>
+
+      <IconButton
+        size="small"
+        onClick={() => removeFilter(filter.id)}
+        color="error"
+        sx={{ ml: "auto" }}
+      >
         <MdDelete />
-      </DeleteButton>
-    </FilterCardContainer>
+      </IconButton>
+    </Box>
   );
 };

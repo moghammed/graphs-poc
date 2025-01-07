@@ -1,29 +1,25 @@
 import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
-import styled from "@emotion/styled";
+import { Popper, Paper, Box } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
-const TooltipContent = styled.div`
-  position: fixed;
-  padding: 8px 12px;
-  background: #333;
-  color: white;
-  border-radius: 4px;
-  font-size: 14px;
-  max-width: 250px;
-  z-index: 1000;
-
-  // Add a small arrow
-  &::before {
-    content: "";
-    position: absolute;
-    top: -4px;
-    left: 50%;
-    transform: translateX(-50%) rotate(45deg);
-    width: 8px;
-    height: 8px;
-    background: #333;
-  }
-`;
+const TooltipContent = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(1, 1.5),
+  backgroundColor: theme.palette.grey[800],
+  color: theme.palette.common.white,
+  fontSize: 14,
+  maxWidth: 250,
+  position: "relative",
+  "&::before": {
+    content: '""',
+    position: "absolute",
+    top: -4,
+    left: "50%",
+    transform: "translateX(-50%) rotate(45deg)",
+    width: 8,
+    height: 8,
+    backgroundColor: theme.palette.grey[800],
+  },
+}));
 
 type TooltipProps = {
   anchorEl?: HTMLElement | null;
@@ -38,24 +34,29 @@ export const Tooltip = ({ anchorEl, transform, children }: TooltipProps) => {
     if (anchorEl) {
       const rect = anchorEl.getBoundingClientRect();
       setPosition({
-        top: rect.bottom + 8, // 8px below the element
-        left: rect.left + rect.width / 2, // Centered horizontally
+        top: rect.bottom + 8,
+        left: rect.left + rect.width / 2,
       });
     }
   }, [anchorEl]);
 
-  if (!anchorEl) return null;
-
-  return createPortal(
-    <TooltipContent
-      style={{
-        top: position.top,
-        left: position.left,
-        transform: anchorEl ? "translateX(-50%)" : transform,
-      }}
+  return (
+    <Popper
+      open={Boolean(anchorEl)}
+      anchorEl={anchorEl}
+      placement="bottom"
+      modifiers={[
+        {
+          name: "offset",
+          options: {
+            offset: [0, 8],
+          },
+        },
+      ]}
     >
-      {children}
-    </TooltipContent>,
-    document.body
+      <TooltipContent elevation={2}>
+        <Box sx={{ position: "relative" }}>{children}</Box>
+      </TooltipContent>
+    </Popper>
   );
 };

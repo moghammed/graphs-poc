@@ -1,26 +1,43 @@
 import { Filter } from "../store/store";
+import {
+  FormControl,
+  Select,
+  MenuItem,
+  TextField,
+  Checkbox,
+} from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
 const getNumberInput = (filter: Filter, onChange: (value: number) => void) => {
   if (filter.operator === "equals") {
     return (options: string[]) => (
-      <select
-        value={filter.value.toString()}
-        onChange={(e) => onChange(Number.parseFloat(e.target.value))}
-      >
-        <option value="">Select</option>
-        {options.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
+      <FormControl size="small" sx={{ minWidth: 120 }}>
+        <Select
+          value={filter.value.toString()}
+          onChange={(e) => onChange(Number.parseFloat(e.target.value))}
+          displayEmpty
+        >
+          <MenuItem value="">
+            <em>Select</em>
+          </MenuItem>
+          {options.map((option) => (
+            <MenuItem key={option} value={option}>
+              {option}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
     );
   } else {
     return () => (
-      <input
+      <TextField
         type="number"
+        size="small"
         value={filter.value.toString()}
         onChange={(e) => onChange(Number.parseFloat(e.target.value))}
+        sx={{ minWidth: 120 }}
       />
     );
   }
@@ -29,24 +46,27 @@ const getNumberInput = (filter: Filter, onChange: (value: number) => void) => {
 const getStringInput = (filter: Filter, onChange: (value: string) => void) => {
   if (filter.operator === "equals") {
     return (options: string[]) => (
-      <select
-        value={filter.value.toString()}
-        onChange={(e) => onChange(e.target.value)}
-      >
-        {options.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
+      <FormControl size="small" sx={{ minWidth: 120 }}>
+        <Select
+          value={filter.value.toString()}
+          onChange={(e) => onChange(e.target.value)}
+          displayEmpty
+        >
+          {options.map((option) => (
+            <MenuItem key={option} value={option}>
+              {option}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
     );
-  }
-  {
+  } else {
     return () => (
-      <input
-        type="text"
+      <TextField
+        size="small"
         value={filter.value.toString()}
         onChange={(e) => onChange(e.target.value)}
+        sx={{ minWidth: 120 }}
       />
     );
   }
@@ -57,25 +77,36 @@ const getBooleanInput = (
   onChange: (value: boolean) => void
 ) => {
   return () => (
-    <input
-      type="checkbox"
-      checked={filter.value === true}
-      onClick={(e) => onChange((e.target as HTMLInputElement).checked)}
-    />
+    <FormControl size="small">
+      <Checkbox
+        checked={filter.value === true}
+        onChange={(e) => onChange(e.target.checked)}
+        sx={{ p: 0.5 }}
+      />
+    </FormControl>
   );
 };
 
 const getDateInput = (filter: Filter, onChange: (value: string) => void) => {
   return () => (
-    <input
-      type="date"
-      value={
-        new Date(typeof filter.value !== "boolean" ? filter.value : Date.now())
-          .toISOString()
-          .split("T")[0]
-      }
-      onChange={(e) => onChange(e.target.value)}
-    />
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <DatePicker
+        value={
+          new Date(
+            typeof filter.value !== "boolean" ? filter.value : Date.now()
+          )
+        }
+        onChange={(date) =>
+          onChange(date ? date.toISOString() : new Date().toISOString())
+        }
+        slotProps={{
+          textField: {
+            size: "small",
+            sx: { minWidth: 120 },
+          },
+        }}
+      />
+    </LocalizationProvider>
   );
 };
 

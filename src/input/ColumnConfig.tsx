@@ -1,77 +1,95 @@
-import styled from "@emotion/styled";
-import { useEffect } from "react";
-import { guessColumnTypes } from "./guessColumnTypes";
 import { atom, useAtom } from "jotai";
+import {
+  Box,
+  Typography,
+  Paper,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 
-type ColumnConfigProps = {
-  data: any[];
-  meta: any;
-};
+export type ColumnType = "string" | "number" | "date" | "boolean";
 
 export type ColumnConfig = {
   name: string;
-  type: "string" | "number" | "date" | "boolean";
+  type: ColumnType;
 };
-
-const EqualSpace = styled.div`
-  margin: 0 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-`;
-
-const ExplanationContainer = styled.div`
-  margin-bottom: 20px;
-
-  h2 {
-    font-size: 20px;
-    font-weight: 600;
-  }
-`;
 
 export const ColumnConfigAtom = atom<ColumnConfig[]>([]);
 
-export const ColumnConfig = ({ data, meta }: ColumnConfigProps) => {
+const inferType = (value: any): ColumnType => {
+  if (value === undefined || value === null || value === "") return "string";
+  if (!isNaN(value)) return "number";
+  if (!isNaN(Date.parse(value))) return "date";
+  if (value === "true" || value === "false") return "boolean";
+  return "string";
+};
+
+export const ColumnConfig = ({
+  data,
+  meta,
+}: {
+  data: any[];
+  meta: { fields: string[] };
+}) => {
   const [columns, setColumns] = useAtom(ColumnConfigAtom);
 
-  // Use effect to guess column types when component mounts
-  useEffect(() => {
-    const guessedTypes = guessColumnTypes(data, meta.fields);
-    setColumns(guessedTypes);
-  }, [data, meta.fields]);
-
-  const handleTypeChange = (index: number, type: ColumnConfig["type"]) => {
-    const newColumns = [...columns];
-    newColumns[index].type = type;
-    setColumns(newColumns);
-  };
+  if (columns.length === 0 && meta?.fields) {
+    const inferredColumns = meta.fields.map((field) => {
+      const values = data.map((row) => row[field]);
+      const nonEmptyValues = values.filter(
+        (value) => value !== undefined && value !== null && value !== ""
+      );
+      const firstValue = nonEmptyValues[0];
+      return {
+        name: field,
+        type: inferType(firstValue),
+      };
+    });
+    setColumns(inferredColumns);
+  }
 
   return (
-    <div>
-      <ExplanationContainer>
-        <h2>Column Config</h2>
-        <p>
-          We've made a best guess at the type of each column. You can change
-          this by selecting the type from the dropdown.
-        </p>
-      </ExplanationContainer>
-      {meta.fields.map((field: string, index: number) => (
-        <EqualSpace key={field}>
-          <label>{field}</label>
-          <select
-            value={columns[index]?.type || "string"}
-            onChange={(e) =>
-              handleTypeChange(index, e.target.value as ColumnConfig["type"])
-            }
-          >
-            <option value="string">String</option>
-            <option value="number">Number</option>
-            <option value="date">Date</option>
-            <option value="boolean">Boolean</option>
-          </select>
-        </EqualSpace>
-      ))}
-    </div>
+    <Box sx={{ mt: 3 }}>
+      <Typography variant="h6" gutterBottom>
+        Configure your columns
+      </Typography>
+      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+        We've automatically detected the type of each column. You can change
+        these if needed.
+      </Typography>
+      <Box
+        sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: 2 }}
+      >
+        {columns.map((column, index) => (
+          <Paper key={column.name} elevation={1} sx={{ p: 2, minWidth: 250 }}>
+            <FormControl fullWidth size="small">
+              <InputLabel id={`column-type-label-${index}`}>
+                {column.name}
+              </InputLabel>
+              <Select
+                labelId={`column-type-label-${index}`}
+                value={column.type}
+                label={`Type for ${column.name}`}
+                onChange={(e) => {
+                  const newColumns = [...columns];
+                  newColumns[index] = {
+                    ...column,
+                    type: e.target.value as ColumnType,
+                  };
+                  setColumns(newColumns);
+                }}
+              >
+                <MenuItem value="string">Text</MenuItem>
+                <MenuItem value="number">Number</MenuItem>
+                <MenuItem value="date">Date</MenuItem>
+                <MenuItem value="boolean">Boolean</MenuItem>
+              </Select>
+            </FormControl>
+          </Paper>
+        ))}
+      </Box>
+    </Box>
   );
 };

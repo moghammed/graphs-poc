@@ -1,28 +1,25 @@
 import { useAtom } from "jotai";
 import { ColumnConfigAtom } from "../../input/ColumnConfig";
-import styled from "@emotion/styled";
+import { Box } from "@mui/material";
 import { ColumnDraggable } from "./ColumnDraggable";
-
-const ColumnDragZoneContainer = styled.div`
-  flex: 0 0 auto;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  width: 100%;
-  gap: 10px;
-`;
 
 export const ColumnDragZone = () => {
   const [columns] = useAtom(ColumnConfigAtom);
 
   return (
-    <ColumnDragZoneContainer>
+    <Box
+      sx={{
+        flex: "0 0 auto",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        width: "100%",
+        gap: 1,
+      }}
+    >
       {columns.map((column) => (
         <ColumnDraggable key={column.name} column={column} />
       ))}
-      {/* <DragOverlay>
-        {draggingColumn ? <ColumnDraggable column={draggingColumn} /> : null}
-      </DragOverlay> */}
-    </ColumnDragZoneContainer>
+    </Box>
   );
 };

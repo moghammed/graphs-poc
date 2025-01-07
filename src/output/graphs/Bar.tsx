@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useTooltip } from "@visx/tooltip";
 
 import { scaleOrdinal } from "@visx/scale";
@@ -8,21 +8,49 @@ import { scaleBand, scaleLinear } from "@visx/scale";
 import { Bar } from "@visx/shape";
 import { range } from "ramda";
 
-import { useStore } from "../../store/store";
+import { RootState, useStore } from "../../store/store";
 import { dataAtom } from "../../input";
 import { Group } from "@visx/group";
 import { AxisBottom, AxisLeft } from "@visx/axis";
 import { applyFilters } from "../../util/applyFilters";
 import { handleMouseOver, Tooltip } from "./common";
 
+import GraphTypes from "../../graphTypes.json";
+
+const BarType = GraphTypes.find((graphType) => graphType.id === "bar")!;
+
 export const BarChart = () => {
+  const mapping = useStore((state) => state.mapping);
+  const hasAllRequiredMappings = BarType.slots.every((slot) =>
+    slot.required ? mapping[slot.name] !== undefined : true
+  );
+  return hasAllRequiredMappings ? <BarChartCmp /> : null;
+};
+
+export const BarChartCmp = () => {
   const [unfilteredData] = useAtom(dataAtom);
-  const { filters } = useStore();
+  const filters = useStore((state) => state.filters);
+
+  const xAxisMapping = useStore((state) => state.mapping["xAxis"]);
+  const yAxisMapping = useStore((state) => state.mapping["yAxis"]);
+  const colorMapping = useStore((state) => state.mapping["color"]);
+  const labelMapping = useStore((state) => state.mapping["label"]);
+
   const data = useMemo(
     () => applyFilters(unfilteredData, filters),
     [unfilteredData, filters]
   );
-  const { mapping } = useStore();
+
+  const barData = useMemo(
+    () =>
+      data.map((d) => ({
+        x: d[xAxisMapping],
+        value: d[yAxisMapping],
+        color: d[colorMapping] ?? d[xAxisMapping],
+        label: d[labelMapping] ?? `${d[xAxisMapping]}: ${d[yAxisMapping]}`,
+      })),
+    [data, xAxisMapping, yAxisMapping, colorMapping, labelMapping]
+  );
 
   const {
     tooltipData,
@@ -37,21 +65,11 @@ export const BarChart = () => {
   const width = 800;
   const height = 600;
 
-  const xAxisHeight = 40;
+  const xAxisHeight = 20;
   const yAxisWidth = 40;
 
   const innerHeight = height - margin.top - margin.bottom - xAxisHeight;
   const innerWidth = width - margin.left - margin.right - yAxisWidth;
-
-  const barData = data.map((d) => {
-    return {
-      x: d[mapping["xAxis"]],
-      value: d[mapping["yAxis"]],
-      color: d[mapping["color"]] ?? d[mapping["xAxis"]],
-      label:
-        d[mapping["label"]] ?? `${d[mapping["xAxis"]]}: ${d[mapping["yAxis"]]}`,
-    };
-  });
 
   const xMax = innerWidth;
   const yMax = innerHeight - margin.bottom - xAxisHeight;
@@ -99,6 +117,7 @@ export const BarChart = () => {
 
             return (
               <Bar
+                key={`${d.x}-${d.value}-${d.color}`}
                 x={barX}
                 y={barY}
                 width={barWidth}

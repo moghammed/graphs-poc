@@ -2,75 +2,16 @@ import { useAtom } from "jotai";
 import { ColumnConfig, ColumnConfigAtom } from "../../input/ColumnConfig";
 import { useStore } from "../../store/store";
 import { FilterCard } from "./FilterCard";
-import styled from "@emotion/styled";
-import { MdAdd, MdClose } from "react-icons/md";
+import {
+  Box,
+  Button,
+  IconButton,
+  Modal,
+  Paper,
+  Typography,
+} from "@mui/material";
+import { Add as MdAdd, Close as MdClose } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
-
-const FilterConfiguratorContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  position: relative;
-`;
-
-const AddFilterButton = styled.button`
-  margin: 10px;
-  background-color: #000;
-  color: #fff;
-  padding: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  outline: none;
-  border: 2px solid #fff;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-`;
-
-const FilterCardsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  width: 100%;
-  position: relative;
-  align-items: stretch;
-`;
-
-const FloatingContainer = styled.div`
-  border: 2px solid #fff;
-  position: fixed;
-  top: 20px;
-  right: 50%;
-  transform: translate(50%, 0);
-  width: 50%;
-  height: 50%;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 10px;
-`;
-
-const HeaderContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #000;
-  color: #fff;
-  padding: 10px;
-  border-radius: 10px;
-  text-align: center;
-`;
-
-const CloseButton = styled.button`
-  background-color: #000;
-  color: #fff;
-  padding: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  border: none;
-  outline: none;
-  flex: 0 0 32px;
-`;
 
 export const getDefaultValue = (column: ColumnConfig) => {
   if (column.type === "boolean") {
@@ -89,36 +30,72 @@ export const getDefaultValue = (column: ColumnConfig) => {
 };
 
 export const FilterConfigurator = ({ close }: { close: () => void }) => {
-  const { filters, addFilter } = useStore();
+  const filters = useStore((state) => state.filters);
+  const addFilter = useStore((state) => state.addFilter);
   const [columns] = useAtom(ColumnConfigAtom);
 
   return (
-    <FloatingContainer>
-      <HeaderContainer>
-        <h2>Filters</h2>
-        <CloseButton onClick={close}>
-          <MdClose />
-        </CloseButton>
-      </HeaderContainer>
-      <FilterConfiguratorContainer>
-        <FilterCardsContainer>
-          {Object.entries(filters).map(([key, filter]) => (
-            <FilterCard key={key} filter={filter} />
-          ))}
-        </FilterCardsContainer>
-        <AddFilterButton
-          onClick={() =>
-            addFilter({
-              id: uuidv4(),
-              column: columns[0],
-              operator: "equals",
-              value: getDefaultValue(columns[0]),
-            })
-          }
+    <Modal
+      open={true}
+      onClose={close}
+      aria-labelledby="filter-configurator-modal"
+      aria-describedby="configure-data-filters"
+    >
+      <Paper
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "50%",
+          height: "50%",
+          bgcolor: "background.paper",
+          borderRadius: 1,
+          boxShadow: 3,
+          outline: "none",
+        }}
+        elevation={3}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            bgcolor: "primary.main",
+            color: "primary.contrastText",
+            p: 1,
+            borderRadius: "8px 8px 0 0",
+          }}
         >
-          Add a new filter <MdAdd />
-        </AddFilterButton>
-      </FilterConfiguratorContainer>
-    </FloatingContainer>
+          <Typography variant="h6">Filters</Typography>
+          <IconButton onClick={close} sx={{ color: "inherit" }}>
+            <MdClose />
+          </IconButton>
+        </Box>
+        <Box sx={{ p: 2, height: "calc(100% - 56px)", overflow: "auto" }}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+            {Object.entries(filters).map(([key, filter]) => (
+              <FilterCard key={key} filter={filter} />
+            ))}
+          </Box>
+          <Button
+            variant="contained"
+            startIcon={<MdAdd />}
+            onClick={() =>
+              addFilter({
+                id: uuidv4(),
+                column: columns[0],
+                operator: "equals",
+                value: getDefaultValue(columns[0]),
+              })
+            }
+            sx={{ mt: 2 }}
+          >
+            Add a new filter
+          </Button>
+        </Box>
+      </Paper>
+    </Modal>
   );
 };

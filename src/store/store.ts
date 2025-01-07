@@ -42,6 +42,11 @@ export type Filter = {
   operator: FilterOperator;
 };
 
+export type RootState = {
+  mapping: Record<string, string>;
+  filters: Record<string, Filter>;
+};
+
 export const useStore = create<{
   mapping: Record<string, string>;
   filters: Record<string, Filter>;

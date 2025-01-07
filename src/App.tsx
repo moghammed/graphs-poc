@@ -1,11 +1,12 @@
 import { useState } from "react";
-import "./compiled.css";
+import "./App.css";
 import { Input } from "./input";
 import { Output } from "./output";
-import { atom, useAtom } from "jotai";
+import { atom, useAtom, useSetAtom } from "jotai";
 import { ColumnConfig } from "./input/ColumnConfig";
 import { DndContext, DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import { useStore } from "./store/store";
+import { ThemeProvider, createTheme, CssBaseline, Box } from "@mui/material";
 
 enum Step {
   Input = 0,
@@ -14,10 +15,45 @@ enum Step {
 
 export const draggingColumnAtom = atom<ColumnConfig | null>(null);
 
+const theme = createTheme({
+  palette: {
+    mode: "light",
+    primary: {
+      main: "#0070f3",
+      dark: "#0051cc",
+    },
+    background: {
+      default: "#ffffff",
+      paper: "#f5f5f5",
+    },
+  },
+  typography: {
+    fontFamily: '"Inter", "Helvetica", "Arial", sans-serif',
+    h4: {
+      fontWeight: 600,
+    },
+    h6: {
+      fontWeight: 600,
+    },
+  },
+  shape: {
+    borderRadius: 8,
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: "none",
+        },
+      },
+    },
+  },
+});
+
 function App() {
   const [step, setStep] = useState<Step>(Step.Input);
-  const [, setDraggingColumn] = useAtom(draggingColumnAtom);
-  const { addMapping } = useStore();
+  const setDraggingColumn = useSetAtom(draggingColumnAtom);
+  const addMapping = useStore((state) => state.addMapping);
 
   const handleDragStart = (event: DragStartEvent) => {
     setDraggingColumn(event.active.data.current as ColumnConfig);
@@ -39,12 +75,15 @@ function App() {
   };
 
   return (
-    <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-      <>
-        {step === Step.Input && <Input next={() => setStep(Step.Output)} />}
-        {step === Step.Output && <Output />}
-      </>
-    </DndContext>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box sx={{ p: 3, minHeight: "100vh" }}>
+        <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+          {step === Step.Input && <Input next={() => setStep(Step.Output)} />}
+          {step === Step.Output && <Output />}
+        </DndContext>
+      </Box>
+    </ThemeProvider>
   );
 }
 

@@ -1,45 +1,18 @@
 import { useDroppable } from "@dnd-kit/core";
 import { Slot } from "../GraphTypePicker/GraphTypePicker";
-import styled from "@emotion/styled";
+import { Box, Paper, Typography, Chip, Stack, IconButton } from "@mui/material";
 import { useAtom, useAtomValue } from "jotai";
 import { draggingColumnAtom } from "../../App";
-import { MdCheck, MdClose } from "react-icons/md";
+import { Check as MdCheck, Close as MdClose } from "@mui/icons-material";
 import { getAllowedTypesIcons } from "./SlotCard";
 import { getColumnTypeIcon } from "../ColumnDragZone/ColumnDraggable";
 import { ColumnConfigAtom } from "../../input/ColumnConfig";
+import { useStore } from "../../store/store";
 
-const SlotDropZoneContainer = styled.div<{ allowed?: boolean }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-  align-items: center;
-  height: 50px;
-  width: 250px;
-  background-color: ${({ allowed }) =>
-    allowed === undefined ? "gray" : allowed ? "green" : "red"};
-`;
+export const SlotDropZone = ({ slot }: { slot: Slot }) => {
+  const removeMapping = useStore((state) => state.removeMapping);
+  const mapping = useStore((state) => state.mapping[slot.name]);
 
-const DroppedColumn = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-  border: 1px solid #fff;
-  border-radius: 4px;
-  padding: 4px;
-  gap: 4px;
-  background-color: #0070f3;
-  color: #fff;
-`;
-
-export const SlotDropZone = ({
-  slot,
-  mapping,
-}: {
-  slot: Slot;
-  mapping: string;
-}) => {
   const columns = useAtomValue(ColumnConfigAtom);
   const column = mapping
     ? columns.find((column) => column.name === mapping)
@@ -54,34 +27,86 @@ export const SlotDropZone = ({
 
   const [draggingColumn] = useAtom(draggingColumnAtom);
 
+  const getBackgroundColor = (theme: any) => {
+    if (!draggingColumn?.type) return theme.palette.grey[200];
+    return slot.allowedTypes.includes(draggingColumn?.type)
+      ? theme.palette.success.light
+      : theme.palette.error.light;
+  };
+
   return (
-    <SlotDropZoneContainer
+    <Paper
       ref={setNodeRef}
-      allowed={
-        draggingColumn?.type
-          ? slot.allowedTypes.includes(draggingColumn?.type)
-          : undefined
-      }
+      elevation={2}
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "row",
+        height: 50,
+        width: 250,
+        bgcolor: (theme) => getBackgroundColor(theme),
+      }}
     >
       {slot.required ? (
         mapping ? (
-          <>
-            <MdCheck color="green" size={40} />
-            <DroppedColumn>
-              {mapping} {column ? getColumnTypeIcon(column) : null}
-            </DroppedColumn>
-          </>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Chip
+              label={
+                <Stack direction="row" spacing={0.5} alignItems="center">
+                  <Typography variant="body2">{mapping}</Typography>
+                  {column && getColumnTypeIcon(column)}
+                  <IconButton
+                    size="small"
+                    onClick={() => {
+                      console.log("removeMapping", slot.name);
+                      removeMapping(slot.name);
+                    }}
+                    color="error"
+                  >
+                    <MdClose />
+                  </IconButton>
+                </Stack>
+              }
+              color="primary"
+            />
+          </Stack>
         ) : (
-          <>
-            <MdClose color="red" size={40} />
-            Required: {getAllowedTypesIcons(slot)}
-          </>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <MdClose color="error" sx={{ fontSize: 28 }} />
+            <Typography variant="body2">
+              Required: {getAllowedTypesIcons(slot)}
+            </Typography>
+          </Stack>
         )
       ) : mapping ? (
-        mapping
+        <Chip
+          label={
+            <Stack direction="row" spacing={0.5} alignItems="center">
+              <Typography variant="body2">{mapping}</Typography>
+              {column && getColumnTypeIcon(column)}
+              <IconButton
+                size="small"
+                onClick={() => {
+                  console.log("removeMapping", slot.name);
+                  removeMapping(slot.name);
+                }}
+                color="error"
+              >
+                <MdClose />
+              </IconButton>
+            </Stack>
+          }
+          color="primary"
+        />
       ) : (
-        <>Drop Columns here: {getAllowedTypesIcons(slot)}</>
+        <Stack direction="row" spacing={1} alignItems="center">
+          <Typography variant="body2" sx={{ color: "text.secondary" }}>
+            Drop Columns here:
+          </Typography>
+          {getAllowedTypesIcons(slot)}
+        </Stack>
       )}
-    </SlotDropZoneContainer>
+    </Paper>
   );
 };

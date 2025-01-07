@@ -13,13 +13,12 @@ import { handleMouseOver, Tooltip } from "./common";
 
 export const PieChart = () => {
   const [unfilteredData] = useAtom(dataAtom);
-  const { filters } = useStore();
+  const mapping = useStore((state) => state.mapping);
+  const filters = useStore((state) => state.filters);
   const data = useMemo(
     () => applyFilters(unfilteredData, filters),
     [unfilteredData, filters]
   );
-
-  const { mapping } = useStore();
 
   const {
     tooltipData,

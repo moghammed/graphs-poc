@@ -13,7 +13,8 @@ import { applyFilters } from "../../util/applyFilters";
 import { handleMouseOver, Tooltip } from "./common";
 
 export const BubbleChart = () => {
-  const { mapping } = useStore();
+  const mapping = useStore((state) => state.mapping);
+  const filters = useStore((state) => state.filters);
 
   const {
     tooltipData,
@@ -25,7 +26,6 @@ export const BubbleChart = () => {
   } = useTooltip();
 
   const [unfilteredData] = useAtom(dataAtom);
-  const { filters } = useStore();
   const data = useMemo(
     () => applyFilters(unfilteredData, filters),
     [unfilteredData, filters]

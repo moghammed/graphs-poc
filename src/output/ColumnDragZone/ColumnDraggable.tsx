@@ -1,49 +1,33 @@
 import { ColumnConfig } from "../../input/ColumnConfig";
-
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import styled from "@emotion/styled";
+import { Box, Chip, Paper, Stack } from "@mui/material";
 import {
-  MdCalendarMonth,
-  MdCheckBox,
-  MdDragIndicator,
-  MdNumbers,
-  MdTextFields,
-} from "react-icons/md";
+  CalendarMonth as MdCalendarMonth,
+  CheckBox as MdCheckBox,
+  DragIndicator as MdDragIndicator,
+  Numbers as MdNumbers,
+  TextFields as MdTextFields,
+} from "@mui/icons-material";
 
 type ColumnDraggableProps = {
   column: ColumnConfig;
 };
 
-const ColumnDraggableContainer = styled.div`
-  padding: 5px;
-
-  background-color: #0070f3;
-  color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  cursor: grab;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-`;
-
 export const getColumnTypeIcon = (column: ColumnConfig) => {
   if (column.type === "string") {
-    return <MdTextFields />;
+    return <MdTextFields fontSize="small" />;
   }
   if (column.type === "number") {
-    return <MdNumbers />;
+    return <MdNumbers fontSize="small" />;
   }
   if (column.type === "date") {
-    return <MdCalendarMonth />;
+    return <MdCalendarMonth fontSize="small" />;
   }
   if (column.type === "boolean") {
-    return <MdCheckBox />;
+    return <MdCheckBox fontSize="small" />;
   }
-  return <MdTextFields />;
+  return <MdTextFields fontSize="small" />;
 };
 
 export const ColumnDraggable = ({ column }: ColumnDraggableProps) => {
@@ -59,15 +43,32 @@ export const ColumnDraggable = ({ column }: ColumnDraggableProps) => {
   };
 
   return (
-    <ColumnDraggableContainer
+    <Chip
       ref={setNodeRef}
       style={style}
       {...listeners}
       {...attributes}
-    >
-      <MdDragIndicator size={24} />
-      {column.name}
-      {getColumnTypeIcon(column)}
-    </ColumnDraggableContainer>
+      sx={{
+        p: 0.5,
+        backgroundColor: "primary.main",
+        color: "primary.contrastText",
+        cursor: "grab",
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 1,
+        "&:hover": {
+          backgroundColor: "primary.dark",
+        },
+      }}
+      label={
+        <Stack direction="row" alignItems="center" gap={1}>
+          <MdDragIndicator fontSize="small" />
+          {column.name}
+          {getColumnTypeIcon(column)}
+        </Stack>
+      }
+      color="primary"
+    />
   );
 };

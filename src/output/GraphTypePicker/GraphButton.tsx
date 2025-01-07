@@ -1,24 +1,31 @@
-import styled from "@emotion/styled";
+import { Button } from "@mui/material";
 import { GraphType } from "./GraphTypePicker";
 import { useAtom } from "jotai";
 import { GraphTypeAtom } from "..";
 
-const GraphButtonCmp = styled.button`
-  color: #000;
-  background-color: #bbb;
-  border: 1px solid #000;
-  padding: 5px;
-  border-radius: 5px;
-`;
-
 export const GraphButton = ({ graphType }: { graphType: GraphType }) => {
-  const [, setGraphType] = useAtom(GraphTypeAtom);
+  const [selectedGraphType, setGraphType] = useAtom(GraphTypeAtom);
 
   const handleClick = () => {
     setGraphType(graphType);
   };
 
   return (
-    <GraphButtonCmp onClick={handleClick}>{graphType.name}</GraphButtonCmp>
+    <Button
+      variant="contained"
+      onClick={handleClick}
+      color={selectedGraphType?.id === graphType.id ? "primary" : "inherit"}
+      sx={{
+        minWidth: 120,
+        "&:hover": {
+          backgroundColor: (theme) =>
+            selectedGraphType?.id === graphType.id
+              ? theme.palette.primary.dark
+              : theme.palette.grey[300],
+        },
+      }}
+    >
+      {graphType.name}
+    </Button>
   );
 };
