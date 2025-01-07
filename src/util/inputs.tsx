@@ -22,7 +22,7 @@ const getNumberInput = (filter: Filter, onChange: (value: number) => void) => {
           <MenuItem value="">
             <em>Select</em>
           </MenuItem>
-          {options.map((option) => (
+          {options.sort().map((option) => (
             <MenuItem key={option} value={option}>
               {option}
             </MenuItem>
@@ -52,7 +52,7 @@ const getStringInput = (filter: Filter, onChange: (value: string) => void) => {
           onChange={(e) => onChange(e.target.value)}
           displayEmpty
         >
-          {options.map((option) => (
+          {options.sort().map((option) => (
             <MenuItem key={option} value={option}>
               {option}
             </MenuItem>
