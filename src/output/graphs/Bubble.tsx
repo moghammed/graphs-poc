@@ -146,15 +146,22 @@ export const BubbleChartCmp = () => {
 
   const colorType = columns.find((c) => c.name === mapping["color"]?.column);
   const colorScale = useMemo(() => {
+    const orderedData = bubbleData.sort((a, b) => (a.color > b.color ? 1 : -1));
+
+    console.log({ orderedData });
+
     return colorType?.type === "string"
       ? scaleOrdinal({
           domain: bubbleData.map((d) => d.color),
           range: schemePaired as string[],
           unknown: "#000",
         })
-      : scaleLinear<number>({
-          range: [4, 40],
-          domain: [0, 1],
+      : scaleLinear({
+          range: ["#ff0000", "#0000ff"],
+          domain: [
+            orderedData[0]?.color as unknown as number,
+            orderedData[orderedData.length - 1]?.color as unknown as number,
+          ],
         });
   }, [colorType, bubbleData]);
 

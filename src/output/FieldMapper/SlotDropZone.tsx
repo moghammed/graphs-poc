@@ -8,7 +8,7 @@ import {
   IconButton,
   Theme,
 } from "@mui/material";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtomValue } from "jotai";
 import { draggingColumnAtom } from "../../App";
 import { Close as MdClose } from "@mui/icons-material";
 import { getAllowedTypesIcons } from "./getAllowedTypesIcons";
