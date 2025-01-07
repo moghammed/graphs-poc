@@ -18,6 +18,10 @@ export const SampleDataGallery = ({
       <Typography variant="h5" sx={{ fontWeight: 600 }}>
         Or try out some sample data:
       </Typography>
+      <Typography variant="body2" sx={{ mb: 1 }}>
+        If you're new here, we recommend starting with the Olympic Medals
+        dataset. 👇
+      </Typography>
       <Box
         sx={{ mt: 2, display: "flex", flexDirection: "row", flexWrap: "wrap" }}
       >
@@ -59,6 +63,7 @@ export const SampleDataGallery = ({
         </Card>
 
         <Card
+          className="highlight"
           sx={{
             m: 1,
             maxWidth: 300,

@@ -27,6 +27,42 @@
   }
 }
 
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes highlight {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 200, 0, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 200, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 200, 0, 0);
+  }
+}
+
+.highlight {
+  animation: highlight 1.5s infinite;
+}
+
+.highlight.pulse {
+  animation: highlight 1.5s infinite, pulse 2s infinite;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;

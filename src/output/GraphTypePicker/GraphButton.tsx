@@ -3,7 +3,13 @@ import { GraphType } from "./GraphTypePicker";
 import { useAtom } from "jotai";
 import { GraphTypeAtom } from "..";
 
-export const GraphButton = ({ graphType }: { graphType: GraphType }) => {
+export const GraphButton = ({
+  graphType,
+  highlight,
+}: {
+  graphType: GraphType;
+  highlight?: boolean;
+}) => {
   const [selectedGraphType, setGraphType] = useAtom(GraphTypeAtom);
 
   const handleClick = () => {
@@ -15,6 +21,7 @@ export const GraphButton = ({ graphType }: { graphType: GraphType }) => {
       variant="contained"
       onClick={handleClick}
       color={selectedGraphType?.id === graphType.id ? "primary" : "inherit"}
+      className={highlight ? "highlight" : ""}
       sx={{
         minWidth: 120,
         "&:hover": {

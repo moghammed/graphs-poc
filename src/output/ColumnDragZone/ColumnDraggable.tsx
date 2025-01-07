@@ -9,6 +9,10 @@ import {
   Numbers as MdNumbers,
   TextFields as MdTextFields,
 } from "@mui/icons-material";
+import { GraphTypeAtom } from "..";
+import { useAtomValue } from "jotai";
+import { useStore } from "../../store/store";
+import { draggingColumnAtom } from "../../App";
 
 type ColumnDraggableProps = {
   column: ColumnConfig;
@@ -31,6 +35,19 @@ export const getColumnTypeIcon = (column: ColumnConfig) => {
 };
 
 export const ColumnDraggable = ({ column }: ColumnDraggableProps) => {
+  const graphType = useAtomValue(GraphTypeAtom);
+  const mapping = useStore((state) => state.mapping);
+  const draggingColumn = useAtomValue(draggingColumnAtom);
+  const isOnboarding = graphType?.id === "bar";
+  const hasMappedXAxis = !!mapping.xAxis;
+  const hasMappedYAxis = !!mapping.yAxis;
+
+  const isHighlighted =
+    !draggingColumn &&
+    isOnboarding &&
+    ((!hasMappedXAxis && column.name === "Country") ||
+      (hasMappedXAxis && !hasMappedYAxis && column.name === "Medals"));
+
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: column.name,
     data: {
@@ -43,9 +60,11 @@ export const ColumnDraggable = ({ column }: ColumnDraggableProps) => {
   };
 
   return (
+    // <div}>
     <Chip
       ref={setNodeRef}
       style={style}
+      className={isHighlighted ? "highlight pulse" : ""}
       {...listeners}
       {...attributes}
       sx={{
@@ -57,6 +76,7 @@ export const ColumnDraggable = ({ column }: ColumnDraggableProps) => {
         flexDirection: "row",
         alignItems: "center",
         gap: 1,
+        zIndex: 1000,
         "&:hover": {
           backgroundColor: "primary.dark",
         },
@@ -70,5 +90,6 @@ export const ColumnDraggable = ({ column }: ColumnDraggableProps) => {
       }
       color="primary"
     />
+    // </div>
   );
 };

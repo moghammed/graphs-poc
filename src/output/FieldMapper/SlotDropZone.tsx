@@ -15,14 +15,26 @@ import { getAllowedTypesIcons } from "./getAllowedTypesIcons";
 import { getColumnTypeIcon } from "../ColumnDragZone/ColumnDraggable";
 import { ColumnConfigAtom } from "../../input/ColumnConfig";
 import { useStore } from "../../store/store";
+import { GraphTypeAtom } from "..";
 
 export const SlotDropZone = ({ slot }: { slot: Slot }) => {
   const removeMapping = useStore((state) => state.removeMapping);
-  const mapping = useStore((state) => state.mapping[slot.name]?.column);
+  const slotMapping = useStore((state) => state.mapping[slot.name]?.column);
+
+  const mapping = useStore((state) => state.mapping);
+  const graphType = useAtomValue(GraphTypeAtom);
+  const isOnboarding = graphType?.id === "bar";
+  const draggingColumn = useAtomValue(draggingColumnAtom);
+
+  const isHighlighted =
+    (isOnboarding &&
+      draggingColumn?.name === "Country" &&
+      slot.name === "xAxis") ||
+    (draggingColumn?.name === "Medals" && slot.name === "yAxis");
 
   const columns = useAtomValue(ColumnConfigAtom);
   const column = mapping
-    ? columns.find((column) => column.name === mapping)
+    ? columns.find((column) => column.name === slotMapping)
     : null;
 
   const { setNodeRef } = useDroppable({
@@ -31,8 +43,6 @@ export const SlotDropZone = ({ slot }: { slot: Slot }) => {
       allowedTypes: slot.allowedTypes,
     },
   });
-
-  const [draggingColumn] = useAtom(draggingColumnAtom);
 
   const getBackgroundColor = (theme: Theme) => {
     if (!draggingColumn?.type) return theme.palette.grey[200];
@@ -52,16 +62,18 @@ export const SlotDropZone = ({ slot }: { slot: Slot }) => {
         flexDirection: "row",
         height: 50,
         width: 250,
+        zIndex: 1,
         bgcolor: (theme) => getBackgroundColor(theme),
       }}
+      className={isHighlighted ? "highlight pulse" : ""}
     >
       {slot.required ? (
-        mapping ? (
+        slotMapping ? (
           <Stack direction="row" spacing={1} alignItems="center">
             <Chip
               label={
                 <Stack direction="row" spacing={0.5} alignItems="center">
-                  <Typography variant="body2">{mapping}</Typography>
+                  <Typography variant="body2">{slotMapping}</Typography>
                   {column && getColumnTypeIcon(column)}
                   <IconButton
                     size="small"
@@ -86,11 +98,11 @@ export const SlotDropZone = ({ slot }: { slot: Slot }) => {
             </Typography>
           </Stack>
         )
-      ) : mapping ? (
+      ) : slotMapping ? (
         <Chip
           label={
             <Stack direction="row" spacing={0.5} alignItems="center">
-              <Typography variant="body2">{mapping}</Typography>
+              <Typography variant="body2">{slotMapping}</Typography>
               {column && getColumnTypeIcon(column)}
               <IconButton
                 size="small"

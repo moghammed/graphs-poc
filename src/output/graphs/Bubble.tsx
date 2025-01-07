@@ -1,8 +1,8 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useTooltip } from "@visx/tooltip";
-import { scaleOrdinal, scaleLinear } from "@visx/scale";
+import { scaleOrdinal, scaleLinear, scaleBand } from "@visx/scale";
 import { schemePaired } from "d3-scale-chromatic";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { Circle } from "@visx/shape";
 import { Group } from "@visx/group";
 import { AxisBottom, AxisLeft } from "@visx/axis";
@@ -13,6 +13,7 @@ import { dataAtom } from "../../input";
 import { applyFilters } from "../../util/applyFilters";
 import { handleMouseOver, Tooltip } from "./common";
 import GraphTypes from "../../graphTypes.json";
+import { ColumnConfigAtom } from "../../input/ColumnConfig";
 
 const BubbleType = GraphTypes.find((graphType) => graphType.id === "bubble")!;
 
@@ -27,6 +28,7 @@ export const BubbleChart = () => {
 export const BubbleChartCmp = () => {
   const mapping = useStore((state) => state.mapping);
   const filters = useStore((state) => state.filters);
+  const columns = useAtomValue(ColumnConfigAtom);
 
   const {
     tooltipData,
@@ -91,28 +93,44 @@ export const BubbleChartCmp = () => {
   const minX = Math.min(...bubbleData.map((d) => d.x));
   const maxX = Math.max(...bubbleData.map((d) => d.x));
 
+  const xAxisColumn = columns.find((c) => c.name === mapping["xAxis"].column);
+  const xAxisType = xAxisColumn?.type;
   const xScale = useMemo(
     () =>
-      scaleLinear<number>({
-        range: [xMin, xMax],
-        round: true,
-        domain: [minX - (maxX - minX) * 0.05, maxX + (maxX - minX) * 0.05],
-      }),
-    [xMin, xMax, minX, maxX]
+      xAxisType === "string"
+        ? scaleBand<number>({
+            range: [xMin, xMax],
+            domain: bubbleData.map((d) => d.x),
+          })
+        : scaleLinear<number>({
+            range: [xMin, xMax],
+            round: true,
+            domain: [minX - (maxX - minX) * 0.05, maxX + (maxX - minX) * 0.05],
+          }),
+    [xAxisType, xMin, xMax, bubbleData, minX, maxX]
   );
 
+  const yAxisColumn = columns.find((c) => c.name === mapping["yAxis"].column);
+  const yAxisType = yAxisColumn?.type;
   const yScale = useMemo(
     () =>
-      scaleLinear<number>({
-        range: [yMax, 0],
-        round: true,
-        domain: [
-          Math.min(...bubbleData.map((d) => d.y)),
-          Math.max(...bubbleData.map((d) => d.y)),
-        ],
-      }),
-    [yMax, bubbleData]
+      yAxisType === "string"
+        ? scaleBand<number>({
+            range: [yMax, 0],
+            domain: bubbleData.map((d) => d.y),
+          })
+        : scaleLinear<number>({
+            range: [yMax, 0],
+            round: true,
+            domain: [
+              Math.min(...bubbleData.map((d) => d.y)),
+              Math.max(...bubbleData.map((d) => d.y)),
+            ],
+          }),
+    [yAxisType, yMax, bubbleData]
   );
+
+  console.log({ xAxisType, yAxisType, xScale, yScale });
 
   const sizeScale = useMemo(
     () =>
@@ -126,17 +144,27 @@ export const BubbleChartCmp = () => {
     [bubbleData]
   );
 
-  const getColor = scaleOrdinal({
-    domain: bubbleData.map((d) => d.color),
-    range: schemePaired as string[],
-    unknown: "#000",
-  });
+  const colorType = columns.find((c) => c.name === mapping["color"]?.column);
+  const colorScale = useMemo(() => {
+    return colorType?.type === "string"
+      ? scaleOrdinal({
+          domain: bubbleData.map((d) => d.color),
+          range: schemePaired as string[],
+          unknown: "#000",
+        })
+      : scaleLinear<number>({
+          range: [4, 40],
+          domain: [0, 1],
+        });
+  }, [colorType, bubbleData]);
 
-  console.log({
-    tooltipLeft,
-    tooltipTop,
-    tooltipData,
-  });
+  const getColor = useCallback(
+    (color: string | number) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return colorScale(color as any);
+    },
+    [colorScale]
+  );
 
   return (
     <>
