@@ -6,7 +6,7 @@ import { applyFilters } from "../../util/applyFilters";
 import { useAtom } from "jotai";
 import GraphTypes from "../../graphTypes.json";
 import { handleMapMarkerClick, Tooltip } from "./common";
-import { schemePaired } from "d3-scale-chromatic";
+import { schemePaired, schemeSet1 } from "d3-scale-chromatic";
 import { scaleOrdinal } from "@visx/scale";
 
 mapboxgl.accessToken =
@@ -57,7 +57,7 @@ export const MapChartCmp = () => {
 
   const getColor = scaleOrdinal({
     domain: filteredData.map((d) => d[mapping["color"]?.column]),
-    range: schemePaired as string[],
+    range: schemeSet1 as string[],
     unknown: "#000",
   });
 
