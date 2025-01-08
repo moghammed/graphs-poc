@@ -9,6 +9,7 @@ import { FilterConfigurator } from "./FilterConfigurator/FilterConfigurator";
 import { FilterAlt as MdFilterAlt } from "@mui/icons-material";
 import { useState } from "react";
 import { useStore } from "../store/store";
+import { MapChart } from "./graphs/Map";
 
 export const GraphTypeAtom = atom<GraphType | null>(null);
 
@@ -83,6 +84,7 @@ export const Output = () => {
             {graphType?.id === "pie" && <PieChart />}
             {graphType?.id === "bar" && <BarChart />}
             {graphType?.id === "bubble" && <BubbleChart />}
+            {graphType?.id === "map" && <MapChart />}
           </Box>
         </Box>
       </Box>

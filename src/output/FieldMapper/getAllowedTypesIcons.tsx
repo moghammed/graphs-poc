@@ -5,6 +5,7 @@ import {
   Numbers,
   CalendarMonth,
   CheckBox,
+  Map as MapIcon,
 } from "@mui/icons-material";
 
 export const getAllowedTypesIcons = (slot: Slot) => {
@@ -35,6 +36,13 @@ export const getAllowedTypesIcons = (slot: Slot) => {
         return (
           <Tooltip key="boolean" title="Boolean">
             <CheckBox fontSize="small" />
+          </Tooltip>
+        );
+      }
+      if (type === "geocoordinates") {
+        return (
+          <Tooltip key="geocoordinates" title="Geocoordinates">
+            <MapIcon fontSize="small" />
           </Tooltip>
         );
       }

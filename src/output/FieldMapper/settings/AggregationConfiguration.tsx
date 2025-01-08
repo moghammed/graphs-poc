@@ -23,6 +23,7 @@ export const AggregationConfiguration = ({ slot }: { slot: Slot }) => {
           >
             <MenuItem value="sum">Sum</MenuItem>
             <MenuItem value="average">Average</MenuItem>
+            <MenuItem value="count">Count</MenuItem>
           </Select>
         </Stack>
       </Box>

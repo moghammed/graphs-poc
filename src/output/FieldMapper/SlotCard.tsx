@@ -31,7 +31,7 @@ export const SlotCard = ({ slot }: { slot: Slot }) => {
           <Stack direction="row" spacing={1} alignItems="center">
             <Box
               ref={settingsRef}
-              sx={{ display: slot.aggregatable !== true ? "none" : "block" }}
+              // sx={{ display: slot.aggregatable !== true ? "none" : "block" }}
             >
               <IconButton size="small" onClick={() => setShowSettings(true)}>
                 <SettingsIcon />

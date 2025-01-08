@@ -46,7 +46,14 @@ export const Input = ({ next }: { next: () => void }) => {
   };
 
   return (
-    <Box>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       {data.length < 1 ? (
         <>
           <Box sx={{ mb: 2.5, maxWidth: 600 }}>

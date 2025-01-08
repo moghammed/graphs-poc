@@ -8,8 +8,14 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
+import { guessColumnTypes } from "./guessColumnTypes";
 
-export type ColumnType = "string" | "number" | "date" | "boolean";
+export type ColumnType =
+  | "string"
+  | "number"
+  | "date"
+  | "boolean"
+  | "geocoordinates";
 
 export type ColumnConfig = {
   name: string;
@@ -17,14 +23,6 @@ export type ColumnConfig = {
 };
 
 export const ColumnConfigAtom = atom<ColumnConfig[]>([]);
-
-const inferType = (value: string): ColumnType => {
-  if (value === undefined || value === null || value === "") return "string";
-  if (!isNaN(Number(value))) return "number";
-  if (!isNaN(Date.parse(value))) return "date";
-  if (value === "true" || value === "false") return "boolean";
-  return "string";
-};
 
 export const ColumnConfig = ({
   data,
@@ -37,17 +35,7 @@ export const ColumnConfig = ({
   const [columns, setColumns] = useAtom(ColumnConfigAtom);
 
   if (columns.length === 0 && meta?.fields) {
-    const inferredColumns = meta.fields.map((field) => {
-      const values = data.map((row) => row[field]);
-      const nonEmptyValues = values.filter(
-        (value) => value !== undefined && value !== null && value !== ""
-      );
-      const firstValue = nonEmptyValues[0];
-      return {
-        name: field,
-        type: inferType(firstValue),
-      };
-    });
+    const inferredColumns = guessColumnTypes(data, meta.fields);
     setColumns(inferredColumns);
   }
 
@@ -86,6 +74,7 @@ export const ColumnConfig = ({
                 <MenuItem value="number">Number</MenuItem>
                 <MenuItem value="date">Date</MenuItem>
                 <MenuItem value="boolean">Boolean</MenuItem>
+                <MenuItem value="geocoordinates">Geocoordinates</MenuItem>
               </Select>
             </FormControl>
           </Paper>

@@ -2,6 +2,7 @@ import { MouseEvent } from "react";
 import { localPoint } from "@visx/event";
 import { Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { groupBy } from "ramda";
 
 export const Tooltip = styled(Paper)(({ theme }) => ({
   position: "absolute",
@@ -35,5 +36,31 @@ export const handleMouseOver =
       tooltipLeft: (point?.x ?? 0) - parentRect.width / 2,
       tooltipTop: (point?.y ?? 0) + 40 - parentRect.height / 2, // Small offset to not overlap with cursor
       tooltipData: datum,
+    });
+  };
+
+export const handleMapMarkerClick =
+  (
+    showTooltip: (props: {
+      tooltipLeft: number;
+      tooltipTop: number;
+      tooltipData: {
+        label: string;
+        nMarkers: number;
+      };
+    }) => void
+  ) =>
+  (e: mapboxgl.MapMouseEvent, markers: mapboxgl.GeoJSONFeature[]) => {
+    const buckets = groupBy((marker) => marker.properties?.title, markers);
+
+    showTooltip({
+      tooltipLeft: e.originalEvent.offsetX,
+      tooltipTop: e.originalEvent.offsetY,
+      tooltipData: {
+        label: `${Object.entries(buckets)
+          .map(([key, value]) => `${key || "Unknown"} (${value?.length ?? 0})`)
+          .join("<br/>")}`,
+        nMarkers: markers.length,
+      },
     });
   };

@@ -14,7 +14,7 @@
       },
       {
         "name": "yAxis",
-        "allowedTypes": ["number", "date"],
+        "allowedTypes": ["number", "date", "boolean", "string"],
         "description": "The y-axis of the chart. This is the value of the data that will be displayed on the y-axis.",
         "id": "yAxis",
         "aggregatable": true,
@@ -44,7 +44,7 @@
     "slots": [
       {
         "name": "value",
-        "allowedTypes": ["number"],
+        "allowedTypes": ["number", "date", "boolean", "string"],
         "description": "The value of the data that will be displayed on the pie chart.",
         "id": "value",
         "aggregatable": true,
@@ -88,7 +88,7 @@
       },
       {
         "name": "size",
-        "allowedTypes": ["number", "boolean"],
+        "allowedTypes": ["number", "date", "boolean", "string"],
         "description": "The size of the data that will be displayed on the bubble chart.",
         "id": "size",
         "aggregatable": true,
@@ -106,6 +106,43 @@
         "allowedTypes": ["string", "number", "date", "boolean"],
         "description": "The label of the bubble chart. This is the label of the data that will be displayed on the bubble chart.",
         "id": "label",
+        "required": false
+      }
+    ]
+  },
+  {
+    "name": "Map",
+    "id": "map",
+    "type": "map",
+    "description": "A map is a chart that plots geographic data on a map. Either as markers, or lines.",
+    "slots": [
+      {
+        "name": "markers",
+        "allowedTypes": ["geocoordinates"],
+        "description": "The location of the data that will be displayed on the map.",
+        "id": "markers",
+        "multi": true
+      },
+      {
+        "name": "heatmap",
+        "allowedTypes": ["geocoordinates"],
+        "description": "The location of the data that will be displayed on the map.",
+        "id": "heatmap",
+        "multi": true
+      },
+      {
+        "name": "label",
+        "allowedTypes": ["number", "date", "boolean", "string"],
+        "description": "The label of the data that will be displayed on the map.",
+        "id": "label",
+        "required": false,
+        "multi": true
+      },
+      {
+        "name": "color",
+        "allowedTypes": ["string", "number", "date", "boolean"],
+        "description": "The color of the data that will be displayed on the map.",
+        "id": "color",
         "required": false
       }
     ]

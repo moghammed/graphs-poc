@@ -8,6 +8,7 @@ import {
   DragIndicator as MdDragIndicator,
   Numbers as MdNumbers,
   TextFields as MdTextFields,
+  Map as MapIcon,
 } from "@mui/icons-material";
 import { GraphTypeAtom } from "..";
 import { useAtomValue } from "jotai";
@@ -30,6 +31,9 @@ export const getColumnTypeIcon = (column: ColumnConfig) => {
   }
   if (column.type === "boolean") {
     return <MdCheckBox fontSize="small" />;
+  }
+  if (column.type === "geocoordinates") {
+    return <MapIcon fontSize="small" />;
   }
   return <MdTextFields fontSize="small" />;
 };

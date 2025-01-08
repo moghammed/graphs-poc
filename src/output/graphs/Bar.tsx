@@ -64,6 +64,8 @@ export const BarChartCmp = () => {
       const aggregatedValue =
         aggregationType === "sum"
           ? sum((entries ?? []).map((d) => Number.parseFloat(d.value)))
+          : aggregationType === "count"
+          ? entries?.length ?? 0
           : mean((entries ?? []).map((d) => Number.parseFloat(d.value)));
 
       return {

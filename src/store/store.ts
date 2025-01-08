@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { ColumnConfig } from "../input/ColumnConfig";
 
-export type AggregationType = "sum" | "average";
+export type AggregationType = "sum" | "average" | "count";
 export type NumberFilterOperator =
   | "equals"
   | "not_equals"
@@ -44,13 +44,14 @@ export type Filter = {
 };
 
 export type RootState = {
-  mapping: Record<string, string>;
+  mapping: Record<string, string | string[]>;
   filters: Record<string, Filter>;
 };
 
 export type Mapping = {
   column: string;
   aggregation: AggregationType;
+  multi: boolean;
 };
 
 export const useStore = create<{
@@ -71,9 +72,10 @@ export const useStore = create<{
     set({ mapping });
   },
   addMapping: (key: string, value: Mapping) => {
-    set((state) => ({
-      mapping: { ...state.mapping, [key]: value },
-    }));
+    set((state) => {
+      const newMapping = { ...state.mapping, [key]: value };
+      return { mapping: newMapping };
+    });
   },
   removeMapping: (key: string) => {
     set((state) => ({

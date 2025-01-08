@@ -13,6 +13,7 @@ export const ColumnDragZone = () => {
         display: "flex",
         flexDirection: "row",
         justifyContent: "center",
+        flexWrap: "wrap",
         width: "100%",
         gap: 1,
       }}

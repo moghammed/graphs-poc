@@ -72,6 +72,7 @@ function App() {
         {
           column: event.active.data.current?.name as string,
           aggregation: "sum",
+          multi: event.active.data.current?.multi ?? false,
         } as Mapping
       );
     }
@@ -80,7 +81,18 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ p: 3, minHeight: "100vh" }}>
+      <Box
+        sx={{
+          p: 3,
+          minHeight: "100vh",
+          maxWidth: 1200,
+          mx: "auto",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          alignContent: "center",
+        }}
+      >
         <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
           {step === Step.Input && <Input next={() => setStep(Step.Output)} />}
           {step === Step.Output && <Output />}

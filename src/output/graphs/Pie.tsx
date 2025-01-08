@@ -42,11 +42,15 @@ export const PieChartCmp = () => {
       }))
     );
 
+    console.log(filteredData);
+
     return Object.entries(groups).map(([label, entries]) => {
       const aggregationType = mapping["value"].aggregation;
       const aggregatedValue =
         aggregationType === "sum"
           ? sum((entries ?? []).map((d) => d.value))
+          : aggregationType === "count"
+          ? entries?.length ?? 0
           : mean((entries ?? []).map((d) => d.value));
 
       return {

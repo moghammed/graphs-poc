@@ -20,7 +20,10 @@ export const SampleDataGallery = ({
       </Typography>
       <Typography variant="body2" sx={{ mb: 1 }}>
         If you're new here, we recommend starting with the Olympic Medals
-        dataset. 👇
+        dataset.
+      </Typography>
+      <Typography variant="body2" sx={{ fontSize: 32 }}>
+        👇
       </Typography>
       <Box
         sx={{ mt: 2, display: "flex", flexDirection: "row", flexWrap: "wrap" }}
@@ -28,7 +31,7 @@ export const SampleDataGallery = ({
         <Card
           sx={{
             m: 1,
-            maxWidth: 300,
+            width: 300,
             cursor: "pointer",
             "&:hover": {
               boxShadow: 6,
@@ -66,7 +69,7 @@ export const SampleDataGallery = ({
           className="highlight"
           sx={{
             m: 1,
-            maxWidth: 300,
+            width: 300,
             cursor: "pointer",
             "&:hover": {
               boxShadow: 6,
@@ -94,6 +97,45 @@ export const SampleDataGallery = ({
             </Box>
             <Link
               href="https://www.kaggle.com/datasets/divyansh22/summer-olympics-medals"
+              sx={{ mt: 2, display: "block" }}
+            >
+              Source: Kaggle
+            </Link>
+          </CardContent>
+        </Card>
+        <Card
+          sx={{
+            m: 1,
+            width: 300,
+            cursor: "pointer",
+
+            "&:hover": {
+              boxShadow: 6,
+            },
+          }}
+          onClick={() => {
+            const url = `${window.location.protocol}//${window.location.host}/datasets/bikeIndexData.csv`;
+            parseFile(url);
+          }}
+        >
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              Stolen Bikes
+            </Typography>
+            <Typography variant="body2" sx={{ mb: 1 }}>
+              50000 entries from Bike Index, a database of stolen bikes.
+              Contains geocoordinates of locations where the bike was stolen and
+              where it was found as well as other information.
+            </Typography>
+            <Box>
+              <Typography variant="body2">Suggested charts:</Typography>
+              <Stack direction="row" spacing={1} sx={{ mt: 0.5 }}>
+                <Chip label="Bar Chart" size="small" />
+                <Chip label="Map" size="small" />
+              </Stack>
+            </Box>
+            <Link
+              href="https://www.kaggle.com/datasets/misterriley/bike-index"
               sx={{ mt: 2, display: "block" }}
             >
               Source: Kaggle
