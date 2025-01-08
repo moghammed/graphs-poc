@@ -6,7 +6,7 @@ import { applyFilters } from "../../util/applyFilters";
 import { useAtom } from "jotai";
 import GraphTypes from "../../graphTypes.json";
 import { handleMapMarkerClick, Tooltip } from "./common";
-import { schemePaired, schemeSet1 } from "d3-scale-chromatic";
+import { schemeSet1 } from "d3-scale-chromatic";
 import { scaleOrdinal } from "@visx/scale";
 
 mapboxgl.accessToken =
