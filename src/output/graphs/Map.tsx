@@ -8,6 +8,7 @@ import GraphTypes from "../../graphTypes.json";
 import { handleMapMarkerClick, Tooltip } from "./common";
 import { schemeSet1 } from "d3-scale-chromatic";
 import { scaleOrdinal } from "@visx/scale";
+import { Stack, Typography } from "@mui/material";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoibW9naGFtbWVkIiwiYSI6ImNtNW8xNHg3dTBmejcya3M4dDc4aGMwMmwifQ.fEAXt0NPdjD_gT9rTcVzvQ";
@@ -242,6 +243,35 @@ export const MapChartCmp = () => {
       }}
     >
       <Tooltip ref={tooltipRef} sx={{ display: "none", maxWidth: "unset" }} />
+      {mapping["color"]?.column ? (
+        <div
+          style={{
+            position: "absolute",
+            top: 10,
+            left: 10,
+            backgroundColor: "#fff",
+            padding: 10,
+            borderRadius: 5,
+            zIndex: 1000,
+          }}
+        >
+          <Typography>Legend</Typography>
+          {getColor.domain().map((d) => (
+            <Stack direction="row" key={d} alignItems="center" gap={1}>
+              <div
+                style={{
+                  backgroundColor: getColor(d),
+                  width: 10,
+                  height: 10,
+                  borderRadius: "50%",
+                  border: "1px solid #000",
+                }}
+              />
+              <Typography>{d || "unknown"}</Typography>
+            </Stack>
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 };
