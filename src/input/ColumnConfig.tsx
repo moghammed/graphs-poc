@@ -52,7 +52,7 @@ export const ColumnConfig = ({
         sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: 2 }}
       >
         {columns.map((column, index) => (
-          <Paper key={column.name} elevation={1} sx={{ p: 2, minWidth: 250 }}>
+          <Paper key={column.name} elevation={1} sx={{ p: 2, minWidth: 200 }}>
             <FormControl fullWidth size="small">
               <InputLabel id={`column-type-label-${index}`}>
                 {column.name}

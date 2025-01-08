@@ -61,7 +61,7 @@ export const SlotDropZone = ({ slot }: { slot: Slot }) => {
         justifyContent: "center",
         flexDirection: "row",
         height: 50,
-        width: 250,
+        width: 200,
         zIndex: 1,
         bgcolor: (theme) => getBackgroundColor(theme),
       }}
@@ -121,7 +121,7 @@ export const SlotDropZone = ({ slot }: { slot: Slot }) => {
       ) : (
         <Stack direction="row" spacing={1} alignItems="center">
           <Typography variant="body2" sx={{ color: "text.secondary" }}>
-            Drop Columns here:
+            Drop here:
           </Typography>
           {getAllowedTypesIcons(slot)}
         </Stack>
